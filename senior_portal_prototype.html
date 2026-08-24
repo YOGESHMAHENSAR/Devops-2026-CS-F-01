@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Senior Professional Job Portal — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+<style>
+  :root{
+    --navy:#0F2A4A; --navy-2:#16375E;
+    --teal:#0F9D6E; --teal-light:#E4F5EE;
+    --coral:#E0642F; --coral-light:#FBE7DD;
+    --amber:#E0A62F; --amber-light:#FBF0DC;
+    --danger:#D9534F; --danger-light:#FBE4E3;
+    --ink:#1F2937; --ink-mid:#5B6472; --ink-soft:#8A93A0;
+    --paper:#FFFFFF; --panel:#F5F6F8; --line:#E4E7EC;
+    --font-d:'Sora',sans-serif; --font-b:'Inter',sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:var(--font-b);color:var(--ink);background:#DEE2E8;}
+
+  /* ---- prototype switcher chrome (not part of the product itself) ---- */
+  .proto-bar{position:sticky;top:0;z-index:100;background:#12172B;padding:12px 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .proto-bar .label{color:#7C87A3;font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin-right:10px;font-weight:600;}
+  .proto-tab{background:transparent;border:1px solid #2C3654;color:#C7CEDA;font-family:var(--font-b);font-size:13.5px;font-weight:500;padding:8px 16px;border-radius:20px;cursor:pointer;transition:.15s;}
+  .proto-tab:hover{border-color:#4A5A8A;}
+  .proto-tab.active{background:var(--coral);border-color:var(--coral);color:#fff;}
+
+  .screen{display:none;}
+  .screen.active{display:block;}
+  .frame{max-width:1440px;margin:0 auto;background:var(--paper);min-height:100vh;}
+
+  a{color:inherit;text-decoration:none;}
+  button{font-family:var(--font-b);cursor:pointer;}
+  h1,h2,h3{font-family:var(--font-d);color:var(--navy);margin:0;}
+  p{margin:0;color:var(--ink-mid);}
+
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:9px;font-weight:600;font-size:14.5px;border:none;}
+  .btn-primary{background:var(--coral);color:#fff;}
+  .btn-outline{background:#fff;color:var(--navy);border:1.5px solid var(--line);}
+  .btn-navy{background:var(--navy);color:#fff;}
+  .btn-sm{padding:8px 14px;font-size:13px;border-radius:7px;}
+
+  .pill{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:12.5px;font-weight:600;}
+  .pill-teal{background:var(--teal-light);color:#0B7754;}
+  .pill-amber{background:var(--amber-light);color:#8A6412;}
+  .pill-coral{background:var(--coral-light);color:#A0431B;}
+  .pill-danger{background:var(--danger-light);color:#A33A37;}
+  .pill-navy{background:#E7ECF3;color:var(--navy);}
+
+  /* ============ TOP NAV (shared across app screens) ============ */
+  .topnav{display:flex;align-items:center;justify-content:space-between;padding:16px 40px;border-bottom:1px solid var(--line);}
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--font-d);font-weight:700;font-size:18px;color:var(--navy);}
+  .brand i{background:var(--navy);color:#fff;width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;}
+  .nav-links{display:flex;gap:32px;font-size:14.5px;font-weight:500;color:var(--ink-mid);}
+  .nav-links a.on{color:var(--navy);}
+  .nav-right{display:flex;align-items:center;gap:18px;}
+  .icon-btn{width:38px;height:38px;border-radius:9px;background:var(--panel);display:flex;align-items:center;justify-content:center;color:var(--ink-mid);font-size:17px;position:relative;}
+  .dot{position:absolute;top:6px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--coral);border:1.5px solid #fff;}
+  .avatar{width:38px;height:38px;border-radius:50%;background:var(--navy-2);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-weight:600;font-size:14px;}
+
+  /* ============ LANDING ============ */
+  .hero{padding:88px 40px 0;text-align:center;background:linear-gradient(180deg,#F5F6F8 0%, #fff 60%);}
+  .hero .kicker{color:var(--coral);font-weight:600;font-size:13.5px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;}
+  .hero h1{font-size:48px;line-height:1.12;max-width:760px;margin:0 auto 18px;}
+  .hero p.sub{font-size:17px;max-width:560px;margin:0 auto 34px;}
+  .hero-cta{display:flex;justify-content:center;gap:16px;margin-bottom:56px;}
+  .split-cta{display:grid;grid-template-columns:1fr 1fr;max-width:900px;margin:0 auto 70px;border-radius:16px;overflow:hidden;border:1px solid var(--line);}
+  .split-cta > div{padding:36px 34px;}
+  .split-cta > div:first-child{background:var(--navy);color:#fff;}
+  .split-cta > div:last-child{background:var(--teal);color:#fff;}
+  .split-cta h3{color:#fff;font-size:20px;margin-bottom:6px;}
+  .split-cta p{color:rgba(255,255,255,.8);font-size:14px;margin-bottom:18px;}
+  .stats-strip{display:flex;justify-content:center;gap:70px;padding:34px 0 70px;border-top:1px solid var(--line);}
+  .stats-strip div{text-align:center;}
+  .stats-strip .num{font-family:var(--font-d);font-weight:700;font-size:30px;color:var(--navy);}
+  .stats-strip .lbl{font-size:13px;color:var(--ink-soft);margin-top:2px;}
+  .feat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border-top:1px solid var(--line);}
+  .feat-strip div{background:#fff;padding:32px 28px;}
+  .feat-strip i{font-size:24px;color:var(--coral);margin-bottom:12px;display:block;}
+  .feat-strip h3{font-size:16px;margin-bottom:6px;}
+  .feat-strip p{font-size:13.5px;}
+
+  /* ============ APP SHELL (dashboard layouts) ============ */
+  .app-shell{display:grid;grid-template-columns:230px 1fr;min-height:calc(100vh - 71px);}
+  .sidebar{border-right:1px solid var(--line);padding:26px 16px;background:#FBFBFC;}
+  .side-link{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:9px;font-size:14px;font-weight:500;color:var(--ink-mid);margin-bottom:4px;}
+  .side-link i{font-size:18px;}
+  .side-link.on{background:var(--navy);color:#fff;}
+  .side-section{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);font-weight:600;margin:20px 14px 8px;}
+  .content{padding:34px 40px;}
+  .content-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px;}
+  .content-head p{font-size:14.5px;margin-top:4px;}
+
+  .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:32px;}
+  .stat-card{border:1px solid var(--line);border-radius:12px;padding:20px 22px;}
+  .stat-card .lbl{font-size:13px;color:var(--ink-soft);font-weight:500;}
+  .stat-card .val{font-family:var(--font-d);font-weight:700;font-size:26px;color:var(--navy);margin:6px 0;}
+  .stat-card .trend{font-size:12.5px;color:var(--teal);font-weight:600;}
+
+  .panel-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .panel-title h3{font-size:17px;}
+  .panel-title a{font-size:13px;color:var(--coral);font-weight:600;}
+
+  .opp-card{border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
+  .opp-card .left{display:flex;gap:16px;align-items:flex-start;}
+  .opp-logo{width:46px;height:46px;border-radius:10px;background:var(--panel);display:flex;align-items:center;justify-content:center;color:var(--navy);font-size:19px;flex-shrink:0;}
+  .opp-card h4{font-size:15.5px;color:var(--navy);font-family:var(--font-d);font-weight:600;margin-bottom:4px;}
+  .opp-meta{display:flex;gap:14px;font-size:12.5px;color:var(--ink-soft);margin-top:6px;}
+  .opp-meta span{display:flex;align-items:center;gap:4px;}
+  .match-badge{text-align:center;}
+  .match-badge .num{font-family:var(--font-d);font-weight:700;font-size:20px;color:var(--teal);}
+  .match-badge .lbl{font-size:11px;color:var(--ink-soft);}
+
+  .profile-card{border:1px solid var(--line);border-radius:12px;padding:22px;text-align:center;margin-bottom:20px;}
+  .profile-card .avatar-lg{width:64px;height:64px;border-radius:50%;background:var(--navy-2);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-weight:600;font-size:22px;margin:0 auto 12px;}
+  .progress-track{height:8px;background:var(--panel);border-radius:6px;margin:14px 0 6px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--teal);border-radius:6px;}
+
+  table{width:100%;border-collapse:collapse;}
+  th{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);font-weight:600;padding:12px 14px;border-bottom:1px solid var(--line);}
+  td{padding:16px 14px;border-bottom:1px solid var(--line);font-size:14px;}
+  .row-name{display:flex;align-items:center;gap:12px;}
+  .row-avatar{width:36px;height:36px;border-radius:50%;background:var(--panel);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-weight:600;color:var(--navy);font-size:13px;}
+  .row-title{font-weight:600;color:var(--navy);font-size:14px;}
+  .row-sub{font-size:12.5px;color:var(--ink-soft);}
+
+  /* ============ OPPORTUNITY DETAIL ============ */
+  .detail-wrap{display:grid;grid-template-columns:1fr 320px;gap:36px;padding:34px 60px;max-width:1200px;margin:0 auto;}
+  .detail-head{display:flex;gap:20px;margin-bottom:26px;}
+  .detail-logo{width:64px;height:64px;border-radius:14px;background:var(--panel);display:flex;align-items:center;justify-content:center;color:var(--navy);font-size:26px;flex-shrink:0;}
+  .detail-tags{display:flex;gap:8px;margin-top:10px;}
+  .section-block{margin-bottom:28px;}
+  .section-block h3{font-size:16px;margin-bottom:10px;}
+  .section-block ul{margin:0;padding-left:20px;font-size:14.5px;color:var(--ink-mid);line-height:1.9;}
+  .side-box{border:1px solid var(--line);border-radius:14px;padding:24px;margin-bottom:20px;}
+  .side-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);font-size:13.5px;}
+  .side-row:last-child{border:none;}
+  .side-row .k{color:var(--ink-soft);}
+  .side-row .v{font-weight:600;color:var(--navy);}
+
+  /* ============ FORM (employer post opportunity) ============ */
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:7px;}
+  .field input,.field select,.field textarea{width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:9px;font-family:var(--font-b);font-size:14px;color:var(--ink);background:#fff;}
+  .field textarea{resize:vertical;min-height:80px;}
+  .chip-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{padding:8px 14px;border:1.5px solid var(--line);border-radius:20px;font-size:13px;color:var(--ink-mid);}
+  .chip.on{background:var(--navy);border-color:var(--navy);color:#fff;}
+
+  /* ============ ADMIN VERIFICATION QUEUE ============ */
+  .queue-card{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin-bottom:12px;}
+  .queue-left{display:flex;gap:14px;align-items:center;}
+  .doc-chip{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-mid);background:var(--panel);padding:6px 11px;border-radius:7px;}
+</style>
+</head>
+<body>
+
+<div class="proto-bar">
+  <span class="label">Prototype</span>
+  <button class="proto-tab active" data-screen="landing">Landing</button>
+  <button class="proto-tab" data-screen="pro-dash">Professional dashboard</button>
+  <button class="proto-tab" data-screen="opp-detail">Opportunity detail</button>
+  <button class="proto-tab" data-screen="emp-dash">Employer — post & match</button>
+  <button class="proto-tab" data-screen="admin">Admin — verification queue</button>
+</div>
+
+<!-- ============ SCREEN 1: LANDING ============ -->
+<div class="screen active" id="landing">
+<div class="frame">
+  <div class="topnav">
+    <div class="brand"><i class="ti ti-briefcase"></i> SeniorPro</div>
+    <div class="nav-links"><a class="on">Home</a><a>Find opportunities</a><a>For employers</a><a>How it works</a></div>
+    <div class="nav-right"><button class="btn btn-outline btn-sm">Log in</button><button class="btn btn-primary btn-sm">Join free</button></div>
+  </div>
+  <div class="hero">
+    <div class="kicker">40–55+ years experience, valued again</div>
+    <h1>Your experience is exactly what someone is looking for</h1>
+    <p class="sub">Connect with organizations that need your consultancy, mentorship, advisory or part-time expertise — on your terms.</p>
+    <div class="hero-cta"><button class="btn btn-primary">Create your profile <i class="ti ti-arrow-right"></i></button><button class="btn btn-outline">Hire an expert</button></div>
+    <div class="split-cta">
+      <div><h3><i class="ti ti-user-star"></i> I'm a professional</h3><p>Get matched with consultancy, mentorship and advisory work that fits your experience.</p><button class="btn btn-sm" style="background:#fff;color:var(--navy);">Get started</button></div>
+      <div><h3><i class="ti ti-building"></i> I'm hiring</h3><p>Find verified, experienced professionals for guidance your team needs right now.</p><button class="btn btn-sm" style="background:#fff;color:var(--teal);">Post an opportunity</button></div>
+    </div>
+  </div>
+  <div class="stats-strip">
+    <div><div class="num">12,400+</div><div class="lbl">Verified professionals</div></div>
+    <div><div class="num">3,200+</div><div class="lbl">Organizations</div></div>
+    <div><div class="num">40%</div><div class="lbl">Skills-based matching</div></div>
+    <div><div class="num">98%</div><div class="lbl">Verified profiles</div></div>
+  </div>
+  <div class="feat-strip">
+    <div><i class="ti ti-shield-check"></i><h3>Verified, always</h3><p>Every profile and company passes document review before going live.</p></div>
+    <div><i class="ti ti-target-arrow"></i><h3>Smart matching</h3><p>Weighted on skills, experience, industry, work type and location.</p></div>
+    <div><i class="ti ti-clock"></i><h3>Work on your terms</h3><p>Full-time, part-time, consultancy or project-based — you choose.</p></div>
+    <div><i class="ti ti-star"></i><h3>Built on trust</h3><p>Ratings and reviews after every engagement, both ways.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- ============ SCREEN 2: PROFESSIONAL DASHBOARD ============ -->
+<div class="screen" id="pro-dash">
+<div class="frame">
+  <div class="topnav">
+    <div class="brand"><i class="ti ti-briefcase"></i> SeniorPro</div>
+    <div class="nav-links"><a class="on">Dashboard</a><a>Opportunities</a><a>Applications</a><a>Messages</a></div>
+    <div class="nav-right"><div class="icon-btn"><i class="ti ti-bell"></i><span class="dot"></span></div><div class="avatar">RK</div></div>
+  </div>
+  <div class="app-shell">
+    <div class="sidebar">
+      <div class="side-link on"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+      <div class="side-link"><i class="ti ti-user"></i> My profile</div>
+      <div class="side-link"><i class="ti ti-search"></i> Find opportunities</div>
+      <div class="side-link"><i class="ti ti-file-check"></i> My applications</div>
+      <div class="side-link"><i class="ti ti-calendar-event"></i> Interviews</div>
+      <div class="side-link"><i class="ti ti-message"></i> Messages</div>
+      <div class="side-section">Account</div>
+      <div class="side-link"><i class="ti ti-file-upload"></i> Documents</div>
+      <div class="side-link"><i class="ti ti-settings"></i> Settings</div>
+    </div>
+    <div class="content">
+      <div class="content-head">
+        <div><h2>Welcome back, Rajesh</h2><p>Here's what's happening with your profile this week.</p></div>
+        <span class="pill pill-teal"><i class="ti ti-rosette-discount-check"></i> Verified profile</span>
+      </div>
+      <div class="stat-row">
+        <div class="stat-card"><div class="lbl">Profile views</div><div class="val">184</div><div class="trend">+12% this week</div></div>
+        <div class="stat-card"><div class="lbl">Matched opportunities</div><div class="val">9</div><div class="trend">3 new today</div></div>
+        <div class="stat-card"><div class="lbl">Active applications</div><div class="val">4</div><div class="trend">1 interview scheduled</div></div>
+        <div class="stat-card"><div class="lbl">Profile completeness</div><div class="val">85%</div><div class="trend">Add 2 more skills</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 300px;gap:28px;">
+        <div>
+          <div class="panel-title"><h3>Matched for you</h3><a>View all →</a></div>
+          <div class="opp-card">
+            <div class="left"><div class="opp-logo"><i class="ti ti-building"></i></div><div><h4>Business advisory — fintech startup</h4><div class="opp-meta"><span><i class="ti ti-map-pin"></i> Remote</span><span><i class="ti ti-clock"></i> 10 hrs/week</span><span><i class="ti ti-briefcase"></i> Consultancy</span></div></div></div>
+            <div class="match-badge"><div class="num">92%</div><div class="lbl">match</div></div>
+          </div>
+          <div class="opp-card">
+            <div class="left"><div class="opp-logo"><i class="ti ti-building"></i></div><div><h4>Mentorship — early-stage founders cohort</h4><div class="opp-meta"><span><i class="ti ti-map-pin"></i> Hybrid, Bengaluru</span><span><i class="ti ti-clock"></i> 6 hrs/week</span><span><i class="ti ti-briefcase"></i> Mentorship</span></div></div></div>
+            <div class="match-badge"><div class="num">87%</div><div class="lbl">match</div></div>
+          </div>
+          <div class="opp-card">
+            <div class="left"><div class="opp-logo"><i class="ti ti-building"></i></div><div><h4>Operations advisor — manufacturing SME</h4><div class="opp-meta"><span><i class="ti ti-map-pin"></i> On-site, Pune</span><span><i class="ti ti-clock"></i> Project-based</span><span><i class="ti ti-briefcase"></i> Advisory</span></div></div></div>
+            <div class="match-badge"><div class="num">79%</div><div class="lbl">match</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="profile-card">
+            <div class="avatar-lg">RK</div>
+            <h3 style="font-size:16px;">Rajesh Kumar</h3>
+            <p style="font-size:13px;">28 yrs · Operations & strategy</p>
+            <div class="progress-track"><div class="progress-fill" style="width:85%;"></div></div>
+            <p style="font-size:12px;">Profile 85% complete</p>
+            <button class="btn btn-outline btn-sm" style="margin-top:14px;width:100%;justify-content:center;">Complete profile</button>
+          </div>
+          <div class="side-box">
+            <h3 style="font-size:14.5px;margin-bottom:12px;">Upcoming</h3>
+            <p style="font-size:13px;margin-bottom:4px;font-weight:600;color:var(--navy);">Interview — Fintech startup</p>
+            <p style="font-size:12.5px;">Tomorrow, 4:00 PM</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ SCREEN 3: OPPORTUNITY DETAIL ============ -->
+<div class="screen" id="opp-detail">
+<div class="frame">
+  <div class="topnav">
+    <div class="brand"><i class="ti ti-briefcase"></i> SeniorPro</div>
+    <div class="nav-links"><a>Dashboard</a><a class="on">Opportunities</a><a>Applications</a><a>Messages</a></div>
+    <div class="nav-right"><div class="icon-btn"><i class="ti ti-bell"></i></div><div class="avatar">RK</div></div>
+  </div>
+  <div class="detail-wrap">
+    <div>
+      <div class="detail-head">
+        <div class="detail-logo"><i class="ti ti-building"></i></div>
+        <div>
+          <h2 style="font-size:24px;">Business advisory — fintech startup</h2>
+          <p style="margin-top:4px;">Northbridge Financial &nbsp;·&nbsp; Posted 3 days ago</p>
+          <div class="detail-tags"><span class="pill pill-navy">Consultancy</span><span class="pill pill-teal">Remote</span><span class="pill pill-amber">10 hrs/week</span></div>
+        </div>
+      </div>
+      <div class="section-block">
+        <h3>About this opportunity</h3>
+        <p style="font-size:14.5px;line-height:1.75;">Northbridge is looking for a senior advisor to guide our leadership team through a Series A fundraise and operational scaling. You'll meet weekly with the founders and review strategic decisions.</p>
+      </div>
+      <div class="section-block">
+        <h3>What you'll do</h3>
+        <ul><li>Review growth strategy and unit economics monthly</li><li>Advise leadership on fundraising narrative</li><li>Mentor two first-time founders on operational discipline</li></ul>
+      </div>
+      <div class="section-block">
+        <h3>Required experience</h3>
+        <ul><li>15+ years in financial services or fintech leadership</li><li>Prior experience advising early-stage startups</li><li>Comfortable with remote, async collaboration</li></ul>
+      </div>
+    </div>
+    <div>
+      <div class="side-box">
+        <div class="match-badge" style="margin-bottom:16px;"><div class="num" style="font-size:32px;">92%</div><div class="lbl">match score</div></div>
+        <div class="side-row"><span class="k">Work type</span><span class="v">Consultancy</span></div>
+        <div class="side-row"><span class="k">Duration</span><span class="v">6 months</span></div>
+        <div class="side-row"><span class="k">Compensation</span><span class="v">₹40,000 / month</span></div>
+        <div class="side-row"><span class="k">Mode</span><span class="v">Remote</span></div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:18px;">Apply now</button>
+        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:10px;">Save for later</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ SCREEN 4: EMPLOYER — POST & MATCH ============ -->
+<div class="screen" id="emp-dash">
+<div class="frame">
+  <div class="topnav">
+    <div class="brand"><i class="ti ti-briefcase"></i> SeniorPro</div>
+    <div class="nav-links"><a class="on">Post opportunity</a><a>Matched professionals</a><a>Applications</a></div>
+    <div class="nav-right"><div class="icon-btn"><i class="ti ti-bell"></i></div><div class="avatar">NF</div></div>
+  </div>
+  <div class="app-shell">
+    <div class="sidebar">
+      <div class="side-link"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+      <div class="side-link"><i class="ti ti-building"></i> Company profile</div>
+      <div class="side-link on"><i class="ti ti-plus"></i> Post opportunity</div>
+      <div class="side-link"><i class="ti ti-users"></i> Matched professionals</div>
+      <div class="side-link"><i class="ti ti-file-check"></i> Applications</div>
+      <div class="side-section">Account</div>
+      <div class="side-link"><i class="ti ti-settings"></i> Settings</div>
+    </div>
+    <div class="content">
+      <div class="content-head"><div><h2>Post a new opportunity</h2><p>We'll match this against 12,400+ verified professionals.</p></div></div>
+      <div class="form-grid">
+        <div class="field"><label>Opportunity title</label><input value="Business advisory — Series A support"></div>
+        <div class="field"><label>Work type</label><select><option>Consultancy</option><option>Mentorship</option><option>Advisory</option><option>Part-time</option></select></div>
+        <div class="field" style="grid-column:1/-1;"><label>Description</label><textarea>Looking for a senior advisor to guide leadership through fundraising and scaling...</textarea></div>
+        <div class="field"><label>Required experience</label><input value="15+ years, fintech leadership"></div>
+        <div class="field"><label>Work mode</label><select><option>Remote</option><option>Hybrid</option><option>On-site</option></select></div>
+        <div class="field"><label>Duration</label><input value="6 months"></div>
+        <div class="field"><label>Budget / compensation</label><input value="₹40,000 per month"></div>
+      </div>
+      <div class="field"><label>Required skills</label>
+        <div class="chip-row"><span class="chip on">Financial strategy</span><span class="chip on">Fundraising</span><span class="chip">Operations</span><span class="chip">Team leadership</span><span class="chip">+ Add skill</span></div>
+      </div>
+      <button class="btn btn-primary" style="margin-top:12px;">Post opportunity <i class="ti ti-arrow-right"></i></button>
+
+      <div class="panel-title" style="margin-top:44px;"><h3>Preview: matched professionals</h3></div>
+      <table>
+        <tr><th>Professional</th><th>Experience</th><th>Match</th><th>Status</th><th></th></tr>
+        <tr><td><div class="row-name"><div class="row-avatar">RK</div><div><div class="row-title">Rajesh Kumar</div><div class="row-sub">Operations & strategy</div></div></div></td><td>28 yrs</td><td><span class="pill pill-teal">92%</span></td><td><span class="pill pill-navy">Verified</span></td><td><button class="btn btn-outline btn-sm">Invite</button></td></tr>
+        <tr><td><div class="row-name"><div class="row-avatar">AS</div><div><div class="row-title">Anita Sharma</div><div class="row-sub">Corporate finance</div></div></div></td><td>22 yrs</td><td><span class="pill pill-teal">88%</span></td><td><span class="pill pill-navy">Verified</span></td><td><button class="btn btn-outline btn-sm">Invite</button></td></tr>
+        <tr><td><div class="row-name"><div class="row-avatar">MV</div><div><div class="row-title">Manoj Verma</div><div class="row-sub">Fintech leadership</div></div></div></td><td>19 yrs</td><td><span class="pill pill-amber">76%</span></td><td><span class="pill pill-navy">Verified</span></td><td><button class="btn btn-outline btn-sm">Invite</button></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ SCREEN 5: ADMIN — VERIFICATION QUEUE ============ -->
+<div class="screen" id="admin">
+<div class="frame">
+  <div class="topnav">
+    <div class="brand"><i class="ti ti-briefcase"></i> SeniorPro <span style="font-size:11px;color:var(--ink-soft);font-weight:500;margin-left:6px;">admin</span></div>
+    <div class="nav-links"><a>Dashboard</a><a class="on">Verification queue</a><a>Opportunities</a><a>Users</a><a>Reports</a></div>
+    <div class="nav-right"><div class="icon-btn"><i class="ti ti-bell"></i><span class="dot"></span></div><div class="avatar">AD</div></div>
+  </div>
+  <div class="app-shell">
+    <div class="sidebar">
+      <div class="side-link"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+      <div class="side-link on"><i class="ti ti-shield-check"></i> Verification queue</div>
+      <div class="side-link"><i class="ti ti-briefcase"></i> Opportunities</div>
+      <div class="side-link"><i class="ti ti-users"></i> Users</div>
+      <div class="side-link"><i class="ti ti-flag"></i> Reports & complaints</div>
+      <div class="side-link"><i class="ti ti-chart-bar"></i> Analytics</div>
+      <div class="side-section">System</div>
+      <div class="side-link"><i class="ti ti-settings"></i> Settings</div>
+    </div>
+    <div class="content">
+      <div class="content-head">
+        <div><h2>Verification queue</h2><p>18 professionals and 4 companies awaiting review.</p></div>
+        <button class="btn btn-outline btn-sm"><i class="ti ti-filter"></i> Filter</button>
+      </div>
+      <div class="stat-row">
+        <div class="stat-card"><div class="lbl">Pending review</div><div class="val">22</div><div class="trend" style="color:var(--amber);">Avg. wait 1.2 days</div></div>
+        <div class="stat-card"><div class="lbl">Verified this week</div><div class="val">61</div><div class="trend">+8 vs last week</div></div>
+        <div class="stat-card"><div class="lbl">Rejected</div><div class="val">5</div><div class="trend" style="color:var(--danger);">Incomplete documents</div></div>
+        <div class="stat-card"><div class="lbl">Active users</div><div class="val">12,438</div><div class="trend">+184 today</div></div>
+      </div>
+
+      <div class="queue-card">
+        <div class="queue-left">
+          <div class="row-avatar" style="width:44px;height:44px;">RK</div>
+          <div>
+            <div class="row-title">Rajesh Kumar</div>
+            <div class="row-sub">28 yrs experience · Operations & strategy</div>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+              <span class="doc-chip"><i class="ti ti-file-text"></i> ID proof</span>
+              <span class="doc-chip"><i class="ti ti-file-text"></i> Resume</span>
+              <span class="doc-chip"><i class="ti ti-file-text"></i> Certificates</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <span class="pill pill-amber">Pending</span>
+          <button class="btn btn-outline btn-sm">Review</button>
+          <button class="btn btn-navy btn-sm">Approve</button>
+        </div>
+      </div>
+      <div class="queue-card">
+        <div class="queue-left">
+          <div class="row-avatar" style="width:44px;height:44px;">NF</div>
+          <div>
+            <div class="row-title">Northbridge Financial <span class="pill pill-navy" style="margin-left:6px;">Company</span></div>
+            <div class="row-sub">Fintech · Registered 2 days ago</div>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+              <span class="doc-chip"><i class="ti ti-file-text"></i> Registration cert.</span>
+              <span class="doc-chip"><i class="ti ti-file-text"></i> GST document</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <span class="pill pill-amber">Pending</span>
+          <button class="btn btn-outline btn-sm">Review</button>
+          <button class="btn btn-navy btn-sm">Approve</button>
+        </div>
+      </div>
+      <div class="queue-card">
+        <div class="queue-left">
+          <div class="row-avatar" style="width:44px;height:44px;">AS</div>
+          <div>
+            <div class="row-title">Anita Sharma</div>
+            <div class="row-sub">22 yrs experience · Corporate finance</div>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+              <span class="doc-chip"><i class="ti ti-file-text"></i> ID proof</span>
+              <span class="doc-chip" style="color:var(--danger);"><i class="ti ti-alert-circle"></i> Certificate missing</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <span class="pill pill-danger">Incomplete</span>
+          <button class="btn btn-outline btn-sm">Message</button>
+          <button class="btn btn-outline btn-sm">Reject</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+document.querySelectorAll('.proto-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.proto-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.screen).classList.add('active');
+    window.scrollTo(0,0);
+  });
+});
+</script>
+</body>
+</html>
