@@ -2,13 +2,14 @@ import {useState} from 'react'
 import './css/App.css'
 import { IconBriefcase } from '@tabler/icons-react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import Admin from './Admin';
 
 function Home() {
     return (
         <div style={{background: 'linear-gradient(180deg, #F5F6F8 0%, #fff 60%)'}}>
-            {/*<button className="bg-amber-100 my-5">*/}
-            {/*    <a href='/senior_portal_prototype.html' target='_blank' style={{textDecoration: "none", color: "black"}}> Check for design</a>*/}
-            {/*</button>*/}
+            <button className="bg-amber-100 my-5">
+             <a href='/senior_portal_prototype.html' target='_blank' style={{textDecoration: "none", color: "black"}}> Check for design</a>
+            </button>
             <div className="topDev" style={{width: "680px", paddingTop: "88px", paddingBottom: "50px", margin:"0 auto"}}>
                 <div className="text-orange-600">
                     <h4 className="text-sm">40–55+ YEARS EXPERIENCE, VALUED AGAIN</h4>
@@ -109,6 +110,7 @@ function Header() {
                         <Link to="/opportunities">Find opportunities</Link>
                         <Link to="/employer">For employers</Link>
                         <Link to="/working">How it works</Link>
+                        <Link to="/admin">Admin Page</Link>
                     </nav>
                 </div>
                 <div className="rightContent">
@@ -135,6 +137,7 @@ function App() {
                         <Route path="/opportunities" element={<Opportunities />} />
                         <Route path="/employer" element={<Employer />} />
                         <Route path="/working" element={<Working />} />
+                        <Route path="/admin/*" element={<Admin/>} />
                     </Routes>
                 </div>
             </BrowserRouter>
