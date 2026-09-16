@@ -1,35 +1,43 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
+import { User } from "./user.model";
 const Schema = mongoose.Schema();
 
-const userSchema = new Schema({
+const JobSeekerProfile = new Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: User,
+        required: true,
+        unique: true,
+        index: true
+    },
     name: {
         type: String,
         trim: true,
         required: true,
     },
-    password: {
+    headline: {
         type: String,
-        required: true
-    },
-    token: {
-        type: String
-    },
-    username: {
-        type: String,
-        required: true,
-        unique: true,
         trim: true
+    },
+    phone: {
+        type: Number,
     },
     experience: {
         type: Number,
         required: true,
-        min: 0
+        min: 0,
+        dafault: 0
     },
     skills: {
         type: [String],
         default: [],
         required: true,
-        set: (skills) => skills.map(skill => skill.trim())
+        set: (skills) => skills.map(skill => skill.trim().toLowerCase()),
+        index: true
+    },
+    resumeUrl: {
+        type: String,
+        default: "",
     },
     industry:{
         type: [String],
@@ -53,10 +61,14 @@ const userSchema = new Schema({
             required: true,
             trim: true,
         },
+        state: {
+            type: String,
+            trim: true,
+        },
         country: {
             type: String,
             default: "India",
-            trime: true
+            trim: true
         }
     },
     expectedSalary: {
@@ -71,13 +83,13 @@ const userSchema = new Schema({
         period: {
             type: String,
             enum: ["Hourly", "Monthly", "Yearly", "project-based"],
-            default: "Monthly"
+            default: "Yearly"
         }
     }
 },
 {timestamps: true}
 );
 
-const userModel = mongoose.model("userModel", userSchema);
+const jobSeeker = mongoose.model("jobSeeker", JobSeekerProfile);
 
-export {userModel};
+export {jobSeeker};
