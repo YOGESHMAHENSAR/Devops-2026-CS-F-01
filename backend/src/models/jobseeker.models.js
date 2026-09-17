@@ -10,11 +10,11 @@ const JobSeekerProfile = new Schema({
         unique: true,
         index: true
     },
-    name: {
-        type: String,
-        trim: true,
-        required: true,
-    },
+    // name: {
+    //     type: String,
+    //     trim: true,
+    //     required: true,
+    // },
     headline: {
         type: String,
         trim: true

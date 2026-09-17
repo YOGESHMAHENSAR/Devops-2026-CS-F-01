@@ -15,11 +15,11 @@ const RecruiterProfileSchema = new mongoose.Schema({
         trim: true
     },
     contactPerson: {
-        name: {
-            type: String,
-            required: true,
-            trim: true,
-        },
+        // name: {
+        //     type: String,
+        //     required: true,
+        //     trim: true,
+        // },
         designation: {
             type: String,
             required: true,

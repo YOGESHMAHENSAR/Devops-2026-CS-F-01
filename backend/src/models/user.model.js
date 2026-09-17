@@ -6,15 +6,15 @@ const userSchema = new Schema({
         type: String,
         required: [true, "Email is required"],
         unique: true,
-        lowercase: true,
+        lowercase: true, //John@gmail.com and john@gmail.com are treated as same.
         trim: true,
         index: true,
     }, 
-    // username: {
-    //     type: String,
-    //     unique: true,
-    //     trim: true
-    // },
+    name: {
+        type: String,
+        unique: true,
+        trim: true
+    },
     refreshToken: {
         type: String,
         default: null
