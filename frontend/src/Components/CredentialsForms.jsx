@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import {useFormik} from "formik";
 import * as Yup from "Yup";
-import { TextField, Button, Typography, Stack, Alert, Link } from '@mui/material';
+import { TextField, Button, Typography, Stack, Alert, Link, Divider} from '@mui/material';
+import GoogleAuthButton from './GoogleAuthButton.jsx';
 import {login, signup} from "../api/auth.js"
 
 const loginSchema = Yup.object({
@@ -17,7 +18,7 @@ const signUpSchema = Yup.object({
 
 export default function CredentialsForms({role, onBack, onAuthSuccess}) {
     let [mode, setMode] = useState("login");
-    let [serverError, serverSetError] = useState("")
+    let [serverError, SetServerError] = useState("")
 
     const formik = useFormik({
         initialValues: {
@@ -29,18 +30,18 @@ export default function CredentialsForms({role, onBack, onAuthSuccess}) {
         enableReinitialize: true,
         onSubmit:
             async (value, {setSubmitting}) => {
-                serverSetError("");
+                SetServerError("");
                 const payload = {...value, role};
                 // console.log("payload is:", payload);
                 const {ok, body} = mode === "login" ? await login(payload): await signup(payload);
                 setSubmitting(false);
 
                 if(!ok){
-                    serverSetError(body.message || "Something went wrong, Please try again Later!");
+                    SetServerError(body.message || "Something went wrong, Please try again Later!");
                     return;
                 }
-                console.log("body is :", body);
-                console.log("token is :", body.token);
+                // console.log("body is :", body);
+                // console.log("token is :", body.token);
                 localStorage.setItem('token', body.token);
                 localStorage.setItem('user', JSON.stringify(body.user));
                 onAuthSuccess(body.user);
@@ -48,6 +49,11 @@ export default function CredentialsForms({role, onBack, onAuthSuccess}) {
     })
     return (
         <Stack spacing={2}>
+            {/* for google btn */}
+            <GoogleAuthButton role={role} onAuthSuccess={onAuthSuccess} onError={SetServerError} />
+
+            <Divider>or</Divider> 
+
             <Button onClick={onBack} size="small" sx={{ alignSelf: 'flex-start' }}>
                 ← Change role
             </Button>

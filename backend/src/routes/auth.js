@@ -1,11 +1,15 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import {OAuth2Client} from "google-auth-library"; // for google login library of backend.
 import {Router} from "express"
 import {User} from "../models/user.model.js";
 import dotenv from "dotenv";
 dotenv.config();
 
 const router = Router();
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+// console.log("google client info: ", googleClient);
 
 function generateToken(user) {
     return jwt.sign(
@@ -24,7 +28,7 @@ function generateToken(user) {
 
 router.post("/signup", async (req, res) =>{
     try{
-        console.log(req.body);
+        // console.log(req.body);
         const {name, email, password, role} = req.body;
 
         if(!name || !email || !password || !role){
@@ -39,10 +43,11 @@ router.post("/signup", async (req, res) =>{
         if(existingUser){
             return res.status(400).json({message: "An account with this E-mail already exists!"});
         }
-
+        //gen10 is the thing which help us to make the 2 differnet hash form of the same password.
+        //beacuse it help us to add the random "noise" between the data sent that is real password!
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-        console.log(hashedPassword);
+        // console.log(hashedPassword);
         const newUser = await User.create({
             name: name,
             email: email,
@@ -112,4 +117,70 @@ router.post("/login", async (req, res) => {
 })
 
 //logout is handled via the jsx only as we only wanna remove the local storage material.
+
+//google signup and login both as this will act for both the things.
+
+router.post("/google", async (req, res) =>{
+    try{
+        // console.log("hello to all");
+        // console.log("req.body: ", req.body);
+        const { credential, role} = req.body; //credentials === client id from the google 
+        // console.log("role is: ", role);
+        if(!credential){
+            return res.status(400).json({message: "Missing Google Credential!"});
+        }
+
+        const ticket = await googleClient.verifyIdToken({
+            idToken: credential,
+            audience: process.env.GOOGLE_CLIENT_ID
+        })
+
+// /        console.log("ticket is: ",ticket);
+
+        const payload = ticket.getPayload();
+        // console.log("google payload: ", payload);
+
+        if(!payload.email_verified){
+            return res.status(400).json({message: "Google account mail is not verified!"});
+        }
+
+        let user = await User.findOne({email: payload.email.toLowerCase()});
+        // console.log("user find info: ", user);
+
+        if(!user){ //it means that the user doesn't exist then we consider it as signup
+            if(!role || !['jobseeker', 'recruiter'].includes(role)){
+                return res.status(400).json({message: "Role is required to get procees further!"});
+            }
+            user = await User.create({
+                name: payload.name,
+                email: payload.email,
+                authProvide: 'google',
+                googleId: payload.sub,
+                role,
+            })
+        }
+        else if(role && user.role !== role){
+            // console.log("user info is :", user.role);
+            return res.status(403).json({
+                message: `This Email is already regirsted with ${user.role}, Please switch the role and then try again..`
+            });
+        }
+        const token = generateToken(user);
+
+        res.json({
+            token, 
+            user: {
+                id: user._id,
+                name: user.name,
+                role: user.role,
+                refreshToken: token,
+                email: user.email
+            }
+        })
+    }
+    catch(e){
+        return res.status(401).json({message: "Invalid Google token.", error: e.message});
+    }
+})
+
 export default router;
