@@ -1,8 +1,11 @@
-import {useState} from 'react'
-import './css/App.css'
+import '../css/App.css'
 import { IconBriefcase } from '@tabler/icons-react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import Admin from './Admin';
+import AdminPage from './Admin.jsx';
+import PageNotFound from './PageNotFound.jsx'
+import AuthPage from './AuthPage.jsx';
+import {logout as clearAuth} from "../api/auth.js";
+import {useState} from 'react';
 
 function Home() {
     return (
@@ -10,7 +13,7 @@ function Home() {
             <button className="bg-amber-100 my-5">
              <a href='/senior_portal_prototype.html' target='_blank' style={{textDecoration: "none", color: "black"}}> Check for design</a>
             </button>
-            <div className="topDev" style={{width: "680px", paddingTop: "88px", paddingBottom: "50px", margin:"0 auto"}}>
+            <div className="topDev" style={{width: "680px", paddingTop: "10px", paddingBottom: "50px", margin:"0 auto"}}>
                 <div className="text-orange-600">
                     <h4 className="text-sm">40–55+ YEARS EXPERIENCE, VALUED AGAIN</h4>
                 </div>
@@ -20,7 +23,7 @@ function Home() {
                 </div>
                 <div className="flex flex-row justify-center space-x-3 mt-7">
                     <button className="cursor-pointer text-white bg-orange-500 rounded-lg px-4 py-1">Create your profile</button>
-                    <button className="cursor-pointer text-black border border-slate-300/75 rounded-lg px-4 py-1">Hire an expert</button>
+                    {/* <button className="cursor-pointer text-black border border-slate-300/75 rounded-lg px-4 py-1">Hire an expert</button> */}
                 </div>
             </div>
             <div className="flex flex-row my-5" style={{width: "1000px", paddingBottom: "40px", margin:"0 auto"}}>
@@ -97,7 +100,12 @@ function Working() {
     return <h1>This is walk-through guide.</h1>
 }
 
-function Header() {
+function handleLogout({setUser}){
+    clearAuth(); //remove the local storage material
+    setUser(null);
+}
+
+function Header({user, setUser}) {
     return (
         <>
             <div className="flex flex-row justify-between px-10 py-3 items-center">
@@ -114,8 +122,11 @@ function Header() {
                     </nav>
                 </div>
                 <div className="rightContent">
-                    <button className="cursor-pointer bg-white text-black rounded-lg border border-slate-300/75 text-sm px-3 py-1.5">Log in</button>
-                    <button className="cursor-pointer bg-orange-500 text-white rounded-lg ml-2 text-sm px-3 py-1.5">Join free</button>
+                    {!user ? <Link to="/login" >
+                            <button className="cursor-pointer bg-white text-black rounded-lg border border-slate-300/75 text-sm px-3 py-1.5">Log in</button>
+                        </Link> : 
+                            <button onClick={() => handleLogout({setUser})}  className="cursor-pointer bg-white text-black rounded-lg border border-slate-300/75 text-sm px-3 py-1.5">Sign Out</button>
+                        }
                 </div>
             </div>
             <hr className="w-full"/>
@@ -124,20 +135,27 @@ function Header() {
 }
 
 function App() {
-    // const [count, setCount] = useState(0)
+    let [user, setUser] = useState(() =>{
+        const saved = localStorage.getItem('user');
+        return saved ? JSON.parse(saved) : null;
+    })
 
-
+    if(!user){
+        return <AuthPage onAuthSuccess={setUser} />
+    }
     return (
         <>
             <BrowserRouter>
                 <div className="firstApp" style={{background: '#FFFFFF'}}>
-                    <Header />
+                    <Header user={user.role} setUser={setUser} />
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/opportunities" element={<Opportunities />} />
                         <Route path="/employer" element={<Employer />} />
                         <Route path="/working" element={<Working />} />
-                        <Route path="/admin/*" element={<Admin/>} />
+                        <Route path="/admin/*" element={<AdminPage />} />
+                        <Route path="/login" element={<AuthPage onAuthSuccess={setUser} />} />
+                        <Route path= "*" element={<PageNotFound />}/>
                     </Routes>
                 </div>
             </BrowserRouter>

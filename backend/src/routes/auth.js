@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import {Router} from "express"
-import User from "../models/user.model.js";
+import {User} from "../models/user.model.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -24,6 +24,7 @@ function generateToken(user) {
 
 router.post("/signup", async (req, res) =>{
     try{
+        console.log(req.body);
         const {name, email, password, role} = req.body;
 
         if(!name || !email || !password || !role){
@@ -41,7 +42,7 @@ router.post("/signup", async (req, res) =>{
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-
+        console.log(hashedPassword);
         const newUser = await User.create({
             name: name,
             email: email,
@@ -110,4 +111,5 @@ router.post("/login", async (req, res) => {
     }
 })
 
-export {router};
+//logout is handled via the jsx only as we only wanna remove the local storage material.
+export default router;

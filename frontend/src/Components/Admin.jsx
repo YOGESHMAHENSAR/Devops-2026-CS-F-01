@@ -1,6 +1,7 @@
 import { Link, Routes, Route } from "react-router-dom";
 import { IconBriefcase } from "@tabler/icons-react";
-import { Bell } from "lucide-react";
+import PageNotFound from "./PageNotFound";
+// import { Bell } from "lucide-react";
 
 function Header() {
   return (
@@ -12,7 +13,7 @@ function Header() {
       </div>
 
       <nav className="space-x-8">
-        <Link to="/admin/dashbpard">Dashboard</Link>
+        <Link to="/admin/dashboard">Dashboard</Link>
         <Link to="/admin/verification">Verification queue</Link>
         <Link to="/admin/opportunities">Opportunities</Link>
         <Link to="/admin/users">Users</Link>
@@ -21,7 +22,7 @@ function Header() {
 
       <div className="flex items-center gap-5">
         <div className="relative">
-          <Bell size={22} className="text-gray-600" />
+          {/* <Bell size={22} className="text-gray-600" /> */}
           <span className="absolute -top-1 -right-1 w-2 h-2 bg-orange-500 rounded-full"></span>
         </div>
 
@@ -355,18 +356,20 @@ function Reports() {
 function Admin() {
   return (
     <div className="min-h-screen text-blue-950">
-      <Header />
+      {/* <Header /> */}
 
       <div className="flex">
         <Sidebar />
 
         <main className="flex-1 p-10">
           <Routes>
+            {/* <Route index element={<Dashboard />} /> */}
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="verification" element={<Verification />} />
             <Route path="opportunities" element={<Opportunities />} />
             <Route path="users" element={<Users />} />
             <Route path="reports" element={<Reports />} />
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
         </main>
       </div>
