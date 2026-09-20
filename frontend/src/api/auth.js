@@ -23,6 +23,13 @@ export function login(payload){
     return request('/login', payload);
 }
 
+//for google login
+export function googleLogin(payload){
+    // console.log("payload of google is: ", payload);
+    //here payload: {credentials, role} credentials is the id token passed by the googlebtn.
+    return request('/google', payload);
+}
+
 export function logout(){ //only this much required as we only wanna remove the local storage saved item only as without
     // info the brower will consider them as the logged out user.
     localStorage.removeItem('token');
