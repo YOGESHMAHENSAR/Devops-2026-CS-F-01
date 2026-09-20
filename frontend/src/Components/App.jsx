@@ -51,7 +51,8 @@ function AppContent(){
                             <Protected user={user} roles={['recruiter']} ><Employer /> </Protected>
                         } />
                         <Route path="/admin/*" element={
-                            <Protected user={user} roles={['admin']}><AdminPage /></Protected>
+                            <Protected user={user} //roles={['admin']}>
+                            ><AdminPage /></Protected>
                         } />
                         {/* <Route path="/login" element={<AuthPage onAuthSuccess={setUser} />} /> */}
                         <Route path= "*" element={<PageNotFound />}/>
