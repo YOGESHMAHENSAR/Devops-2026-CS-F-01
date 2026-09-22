@@ -15,7 +15,7 @@ const JobSeekerProfile = new Schema({
         index: true
     },
     // name: { // we have alreay taken it in the user.model.js
-    //     type: String,
+    //     type: String,++
     //     trim: true,
     //     required: true,
     // },
