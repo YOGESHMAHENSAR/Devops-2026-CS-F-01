@@ -12,6 +12,7 @@ import Home from '../Pages/Home.jsx';
 import Opportunity from '../Pages/Opportunity.jsx'
 import Working from '../Pages/Working.jsx';
 import Employer from '../Pages/Employer.jsx';
+import Jobseekerform from '../Forms/Jobseekerform.jsx';
 import {logout as clearAuth} from "../api/auth.js";
 import {useState} from 'react';
 
@@ -40,6 +41,9 @@ function AppContent(){
                         } />
                         <Route path="/" element={
                             <Protected user={user}><Home /></Protected> 
+                        }/>
+                        <Route path="/jobseekerProfile" element={
+                            <Protected user={user}><Jobseekerform /></Protected>
                         }/>
                         <Route path="/Opportunity" element={
                             <Protected user={user}><Opportunity/></Protected>

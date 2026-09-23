@@ -1,4 +1,9 @@
-import "dotenv/config"
+import dns from 'node:dns';
+
+// Enforce IPv4 DNS order and set reliable fallbacks
+dns.setDefaultResultOrder('ipv4first');
+dns.setServers(['8.8.8.8', '1.1.1.1']);
+
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
