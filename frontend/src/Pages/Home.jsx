@@ -1,12 +1,12 @@
 export default function Home() {
     return (
         <div style={{background: 'linear-gradient(180deg, #F5F6F8 0%, #fff 60%)'}}>
-            <button className="bg-amber-100 my-5">
+            {/* <button className="bg-amber-100 my-5">
              <a href='/senior_portal_prototype.html' target='_blank' style={{textDecoration: "none", color: "black"}}> Check for design</a>
-            </button>
+            </button> */}
             <div className="topDev" style={{width: "680px", paddingTop: "10px", paddingBottom: "50px", margin:"0 auto"}}>
                 <div className="text-orange-600">
-                    <h4 className="text-sm">40–55+ YEARS EXPERIENCE, VALUED AGAIN</h4>
+                    <h4 className="text-sm text-center">40–55+ YEARS EXPERIENCE, VALUED AGAIN</h4>
                 </div>
                 <div className="text-center">
                     <div className="text-4xl font-bold text-black my-3">Your experience is exactly what someone is looking for</div>

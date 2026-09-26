@@ -7,7 +7,7 @@ export default function AuthPage({ onAuthSuccess }) {
   const [role, setRole] = useState(null);
  
   return (
-    <Container sx={{ mt: 10 }}>
+    <Container>
       {/* <Paper elevation={0} variant="outlined" > */}
         {!role ? (
           <RoleSelect onSelect={setRole} />
