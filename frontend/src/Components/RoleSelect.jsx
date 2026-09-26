@@ -20,7 +20,7 @@ const ROLES = [
 
 export default function RoleSelect({ onSelect }) {
     return (
-        <div className="fixed inset-0 z-50 h-screen w-screen overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-100">
+        <div className="fixed inset-0 z-50 h-screen w-screen bg-gradient-to-br from-blue-50 via-white to-blue-100">
 
             <div className="mx-auto flex h-full w-full max-w-6xl flex-col justify-center px-6">
 

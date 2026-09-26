@@ -32,7 +32,7 @@ function AppContent(){
     return (
         <>
             <BrowserRouter>
-                <div className="firstApp" style={{background: '#FFFFFF'}}>
+                <div className="firstApp">
                     {user && <Header user={user} onLogout={handleLogout} />}
                     <Routes>
                         <Route path='/login' element={
