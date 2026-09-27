@@ -181,11 +181,10 @@ function Dashboard() {
             {activities.map((activity, index) => (
               <div
                 key={activity.text}
-                className={`flex justify-between py-4 ${
-                  index !== activities.length - 1
+                className={`flex justify-between py-4 ${index !== activities.length - 1
                     ? "border-b"
                     : ""
-                }`}
+                  }`}
               >
                 <p className="text-gray-600">
                   {activity.text}
@@ -297,11 +296,10 @@ function Verification() {
                 {user.documents.map((document) => (
                   <span
                     key={document}
-                    className={`px-4 py-2 rounded-lg text-sm ${
-                      document === "Certificate missing"
+                    className={`px-4 py-2 rounded-lg text-sm ${document === "Certificate missing"
                         ? "bg-red-50 text-red-500"
                         : "bg-gray-100 text-gray-600"
-                    }`}
+                      }`}
                   >
                     {document}
                   </span>
@@ -312,11 +310,10 @@ function Verification() {
 
           <div className="flex items-center gap-3">
             <span
-              className={`px-5 py-2 rounded-full font-medium ${
-                user.status === "Incomplete"
+              className={`px-5 py-2 rounded-full font-medium ${user.status === "Incomplete"
                   ? "bg-red-50 text-red-600"
                   : "bg-orange-50 text-orange-600"
-              }`}
+                }`}
             >
               {user.status}
             </span>
@@ -326,11 +323,10 @@ function Verification() {
             </button>
 
             <button
-              className={`px-5 py-2.5 rounded-lg font-semibold ${
-                user.button2 === "Approve"
+              className={`px-5 py-2.5 rounded-lg font-semibold ${user.button2 === "Approve"
                   ? "bg-blue-950 text-white"
                   : "border border-gray-300 text-blue-950"
-              }`}
+                }`}
             >
               {user.button2}
             </button>
@@ -356,14 +352,14 @@ function Reports() {
 function Admin() {
   return (
     <div className="min-h-screen text-blue-950">
-      {/* <Header /> */}
+      <Header />
 
       <div className="flex">
         <Sidebar />
 
         <main className="flex-1 p-10">
           <Routes>
-            {/* <Route index element={<Dashboard />} /> */}
+            <Route index element={<Dashboard />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="verification" element={<Verification />} />
             <Route path="opportunities" element={<Opportunities />} />
@@ -376,5 +372,4 @@ function Admin() {
     </div>
   );
 }
-
 export default Admin;
