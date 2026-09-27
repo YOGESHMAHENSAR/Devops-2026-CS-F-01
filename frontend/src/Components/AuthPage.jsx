@@ -1,20 +1,24 @@
 import { useState } from 'react';
-import { Container, Paper } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import RoleSelect from './RoleSelect.jsx';
 import CredentialsForm from './CredentialsForms.jsx';
- 
+
 export default function AuthPage({ onAuthSuccess }) {
   const [role, setRole] = useState(null);
- 
+  const navigate = useNavigate();
+
   return (
-    <Container>
-      {/* <Paper elevation={0} variant="outlined" > */}
-        {!role ? (
-          <RoleSelect onSelect={setRole} />
-        ) : (
-          <CredentialsForm role={role} onBack={() => setRole(null)} onAuthSuccess={onAuthSuccess} />
-        )}
-      {/* </Paper> */}
-    </Container>
+    <div>
+      {!role ? (
+        <RoleSelect onSelect={setRole} />
+      ) : (
+        <CredentialsForm
+          role={role}
+          onBack={() => setRole(null)}
+          onAuthSuccess={onAuthSuccess}
+          onForgotPassword={() => navigate('/forgot-password')}
+        />
+      )}
+    </div>
   );
 }

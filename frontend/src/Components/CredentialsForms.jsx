@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -28,6 +29,7 @@ export default function CredentialsForms({
     role,
     onBack,
     onAuthSuccess,
+    onForgotPassword,
 }) {
     const [mode, setMode] = useState("login");
     const [serverError, setServerError] = useState("");
@@ -69,7 +71,7 @@ export default function CredentialsForms({
                 if (!ok) {
                     setServerError(
                         body?.message ||
-                            "Something went wrong. Please try again."
+                        "Something went wrong. Please try again."
                     );
 
                     setSubmitting(false);
@@ -112,82 +114,139 @@ export default function CredentialsForms({
         );
     };
 
+    const fieldClass = (hasError) =>
+        `flex h-[50px] w-full items-center rounded-lg border px-4 transition-all duration-200 ${hasError
+            ? "border-red-400 bg-red-50"
+            : "border-slate-200 bg-white hover:border-slate-300 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/10"
+        }`;
+
+    const inputClass =
+        "w-full bg-transparent text-[15px] text-slate-900 outline-none placeholder:text-slate-400 [&:-webkit-autofill]:[box-shadow:0_0_0_1000px_white_inset] [&:-webkit-autofill]:[-webkit-text-fill-color:#0f172a]";
+
     return (
-        <div className="min-h-screen w-full bg-gradient-to-br from-blue-50 via-white to-blue-100">
+        <div className="min-h-screen w-full bg-white lg:h-screen lg:overflow-hidden">
 
-            <main className="relative min-h-screen w-full px-6 py-4">
+            <main className="grid min-h-screen w-full grid-cols-1 lg:h-full lg:min-h-0 lg:grid-cols-2">
 
-                {/* Background Decoration */}
-                <div className="pointer-events-none absolute left-0 top-32 h-72 w-72 rounded-full bg-blue-200/30 blur-3xl" />
+                {/* Left Branding Panel */}
+                <section className="relative flex min-h-[300px] flex-col overflow-hidden bg-[#0f172e] px-7 py-6 text-white sm:px-12 lg:h-full lg:min-h-0 lg:px-12 lg:py-7 xl:px-16">
 
-                <div className="pointer-events-none absolute bottom-0 right-0 h-80 w-80 rounded-full bg-blue-300/20 blur-3xl" />
+                    {/* Background Decoration */}
+                    <div className="pointer-events-none absolute -left-36 top-1/4 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
 
-                <div className="relative mx-auto w-full max-w-3xl">
+                    <div className="pointer-events-none absolute -right-32 bottom-0 h-80 w-80 rounded-full bg-indigo-500/10 blur-3xl" />
 
-                    <button
-                        type="button"
-                        onClick={onBack}
-                        className="group mb-4 flex items-center gap-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-700"
-                    >
-                        <ArrowLeft
-                            size={17}
-                            className="transition-transform duration-200 group-hover:-translate-x-1"
-                        />
+                    {/* Back Button */}
+                    <div className="relative z-10 flex shrink-0 items-center">
+                        <button
+                            type="button"
+                            onClick={() => onBack?.()}
+                            aria-label="Go back"
+                            className="group inline-flex items-center gap-3 rounded-md py-2 text-[15px] font-medium text-white/90 transition-colors hover:text-blue-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                        >
+                            <ArrowLeft
+                                size={19}
+                                className="transition-transform duration-200 group-hover:-translate-x-1"
+                            />
 
-                        Change role
-                    </button>
+                            Back
+                        </button>
+                    </div>
 
-                    <div className="rounded-3xl border border-slate-200/70 bg-white p-7 shadow-[0_20px_60px_rgba(37,99,235,0.12)] sm:p-9">
+                    {/* Branding Content */}
+                    <div className="relative z-10 mx-auto flex w-full max-w-xl flex-1 flex-col items-center justify-center py-8 text-center">
 
-                        <div className="mb-7 text-center">
+                        {/* Logo */}
+                        <div className="mb-5 flex h-[68px] w-[68px] items-center justify-center rounded-2xl border border-white/10 bg-white/[0.06] shadow-lg shadow-black/10">
 
-                            <div className="mb-4 flex items-center justify-center gap-2">
-                                <span className="h-2 w-2 rounded-full bg-blue-600" />
+                            <UserRound
+                                size={32}
+                                strokeWidth={1.7}
+                                className="text-blue-400"
+                            />
 
-                                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-600">
-                                    {roleName}
-                                </span>
-                            </div>
+                        </div>
 
-                            <h1 className="text-[42px] font-bold leading-tight tracking-[-0.03em] text-slate-950">
+                        {/* Brand Name */}
+                        <h2 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+                            Senior<span className="text-blue-400">Pro</span>
+                        </h2>
+
+                        <div className="mt-4 h-1 w-12 rounded-full bg-blue-500" />
+
+                        {/* Description */}
+                        <p className="mt-7 max-w-lg text-center text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
+                            {role === "jobseeker"
+                                ? "Connect with opportunities, showcase your experience, and take the next step in your professional journey."
+                                : "Discover exceptional talent, connect with professionals, and find the right people for your organization."}
+                        </p>
+
+                        {/* Role Badge */}
+                        <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-sm text-slate-300">
+                            <span className="h-2 w-2 rounded-full bg-emerald-400" />
+
+                            {roleName} account
+                        </div>
+
+                    </div>
+
+                    {/* Copyright */}
+                    <footer className="relative z-10 shrink-0 pb-1 pt-3 text-center text-sm text-slate-400">
+                        © 2026 SeniorPro. All rights reserved.
+                    </footer>
+
+                </section>
+
+                {/* Right Login Panel */}
+                <section className="flex min-h-[600px] items-center justify-center bg-white px-6 py-8 sm:px-10 lg:h-full lg:min-h-0 lg:overflow-hidden lg:px-10 lg:py-5 xl:px-16">
+
+                    <div className="w-full max-w-[440px]">
+
+                        {/* Form Heading */}
+                        <div className="mb-6 text-center">
+
+                            <h1 className="text-[28px] font-bold leading-tight tracking-[-0.04em] text-[#0f172e] sm:text-[30px]">
                                 {isLogin
-                                    ? "Welcome back."
-                                    : "Create your account."}
+                                    ? "Sign in to your account"
+                                    : "Create your account"}
                             </h1>
 
                             <p className="mt-2 text-[15px] leading-6 text-slate-500">
                                 {isLogin
-                                    ? "Sign in to continue to your SeniorPro account."
-                                    : "Create your account and start connecting with opportunities."}
+                                    ? "Enter your credentials to access SeniorPro."
+                                    : "Get started and connect with new opportunities."}
                             </p>
 
                         </div>
 
+                        {/* Authentication Form */}
                         <form
                             onSubmit={formik.handleSubmit}
-                            className="mx-auto max-w-2xl space-y-5"
+                            className="space-y-4"
+                            noValidate
                         >
 
+                            {/* Full Name */}
                             {!isLogin && (
                                 <div>
+
                                     <label
                                         htmlFor="name"
-                                        className="mb-2 block text-left text-sm font-semibold text-slate-700"
+                                        className="mb-1.5 block text-left text-[15px] font-medium text-[#0f172e]"
                                     >
                                         Full name
                                     </label>
 
                                     <div
-                                        className={`flex h-[52px] w-full items-center rounded-xl border px-4 transition-all duration-200 ${
+                                        className={fieldClass(
                                             formik.touched.name &&
                                             formik.errors.name
-                                                ? "border-red-400 bg-red-50"
-                                                : "border-slate-200 bg-slate-50 hover:border-slate-300 focus-within:border-blue-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-500/10"
-                                        }`}
+                                        )}
                                     >
+
                                         <UserRound
-                                            size={18}
-                                            className="mr-3 shrink-0 text-slate-400"
+                                            size={19}
+                                            className="shrink-0 text-slate-400"
                                         />
 
                                         <input
@@ -199,98 +258,100 @@ export default function CredentialsForms({
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
                                             autoComplete="name"
-                                            className="
-                                                w-full
-                                                bg-transparent
-                                                text-[15px]
-                                                text-slate-900
-                                                outline-none
-                                                placeholder:text-slate-400
-                                                [&:-webkit-autofill]:[box-shadow:0_0_0_1000px_#f8fafc_inset]
-                                                [&:-webkit-autofill]:[-webkit-text-fill-color:#0f172a]
-                                            "
+                                            className={inputClass}
                                         />
+
                                     </div>
 
                                     {formik.touched.name &&
                                         formik.errors.name && (
-                                            <p className="mt-1.5 text-left text-xs font-medium text-red-500">
+                                            <p className="mt-1 text-left text-xs font-medium text-red-500">
                                                 {formik.errors.name}
                                             </p>
                                         )}
+
                                 </div>
                             )}
 
+                            {/* Email */}
                             <div>
+
                                 <label
                                     htmlFor="email"
-                                    className="mb-2 block text-left text-sm font-semibold text-slate-700"
+                                    className="mb-1.5 block text-left text-[15px] font-medium text-[#0f172e]"
                                 >
-                                    Email address
+                                    Email
                                 </label>
 
                                 <div
-                                    className={`flex h-[52px] w-full items-center rounded-xl border px-4 transition-all duration-200 ${
+                                    className={fieldClass(
                                         formik.touched.email &&
                                         formik.errors.email
-                                            ? "border-red-400 bg-red-50"
-                                            : "border-slate-200 bg-slate-50 hover:border-slate-300 focus-within:border-blue-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-500/10"
-                                    }`}
+                                    )}
                                 >
+
                                     <Mail
-                                        size={18}
-                                        className="mr-3 shrink-0 text-slate-400"
+                                        size={19}
+                                        className="shrink-0 text-slate-400"
                                     />
 
                                     <input
                                         id="email"
                                         type="email"
                                         name="email"
-                                        placeholder="you@example.com"
+                                        placeholder="name@example.com"
                                         value={formik.values.email}
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}
                                         autoComplete="email"
-                                        className="
-                                            w-full
-                                            bg-transparent
-                                            text-[15px]
-                                            text-slate-900
-                                            outline-none
-                                            placeholder:text-slate-400
-                                            [&:-webkit-autofill]:[box-shadow:0_0_0_1000px_#f8fafc_inset]
-                                            [&:-webkit-autofill]:[-webkit-text-fill-color:#0f172a]
-                                        "
+                                        className={inputClass}
                                     />
+
                                 </div>
 
                                 {formik.touched.email &&
                                     formik.errors.email && (
-                                        <p className="mt-1.5 text-left text-xs font-medium text-red-500">
+                                        <p className="mt-1 text-left text-xs font-medium text-red-500">
                                             {formik.errors.email}
                                         </p>
                                     )}
+
                             </div>
 
+                            {/* Password */}
                             <div>
-                                <label
-                                    htmlFor="password"
-                                    className="mb-2 block text-left text-sm font-semibold text-slate-700"
-                                >
-                                    Password
-                                </label>
+
+                                <div className="mb-1.5 flex items-center justify-between gap-3">
+
+                                    <label
+                                        htmlFor="password"
+                                        className="block text-left text-[15px] font-medium text-[#0f172e]"
+                                    >
+                                        Password
+                                    </label>
+
+                                    {isLogin && (
+                                        <button
+                                            type="button"
+                                            onClick={onForgotPassword}
+                                            className="text-sm font-medium text-blue-600 transition-colors hover:text-blue-800 hover:underline"
+                                        >
+                                            Forgot password?
+                                        </button>
+                                    )}
+
+                                </div>
 
                                 <div
-                                    className={`flex h-[52px] w-full items-center rounded-xl border px-4 transition-all duration-200 ${
+                                    className={fieldClass(
                                         formik.touched.password &&
                                         formik.errors.password
-                                            ? "border-red-400 bg-red-50"
-                                            : "border-slate-200 bg-slate-50 hover:border-slate-300 focus-within:border-blue-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-500/10"
-                                    }`}
+                                    )}
                                 >
+
                                     <Lock
-                                        size={18}
-                                        className="mr-3 shrink-0 text-slate-400"
+                                        size={19}
+                                        className="shrink-0 text-slate-400"
                                     />
 
                                     <input
@@ -310,26 +371,15 @@ export default function CredentialsForms({
                                                 ? "current-password"
                                                 : "new-password"
                                         }
-                                        className="
-                                            w-full
-                                            bg-transparent
-                                            text-[15px]
-                                            text-slate-900
-                                            outline-none
-                                            placeholder:text-slate-400
-                                            [&:-webkit-autofill]:[box-shadow:0_0_0_1000px_#f8fafc_inset]
-                                            [&:-webkit-autofill]:[-webkit-text-fill-color:#0f172a]
-                                        "
+                                        className={inputClass}
                                     />
 
                                     <button
                                         type="button"
                                         onClick={() =>
-                                            setShowPassword(
-                                                !showPassword
-                                            )
+                                            setShowPassword(!showPassword)
                                         }
-                                        className="ml-2 flex shrink-0 items-center justify-center text-slate-400 transition-colors hover:text-slate-700"
+                                        className="flex shrink-0 items-center justify-center text-slate-400 transition-colors hover:text-slate-700"
                                         aria-label={
                                             showPassword
                                                 ? "Hide password"
@@ -337,31 +387,38 @@ export default function CredentialsForms({
                                         }
                                     >
                                         {showPassword ? (
-                                            <EyeOff size={18} />
+                                            <EyeOff size={19} />
                                         ) : (
-                                            <Eye size={18} />
+                                            <Eye size={19} />
                                         )}
                                     </button>
+
                                 </div>
 
                                 {formik.touched.password &&
                                     formik.errors.password && (
-                                        <p className="mt-1.5 text-left text-xs font-medium text-red-500">
+                                        <p className="mt-1 text-left text-xs font-medium text-red-500">
                                             {formik.errors.password}
                                         </p>
                                     )}
+
                             </div>
 
+                            {/* Server Error */}
                             {serverError && (
-                                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-left text-sm font-medium text-red-600">
+                                <div
+                                    role="alert"
+                                    className="rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-left text-sm font-medium text-red-600"
+                                >
                                     {serverError}
                                 </div>
                             )}
 
+                            {/* Submit Button */}
                             <button
                                 type="submit"
                                 disabled={formik.isSubmitting}
-                                className="group mt-2 flex h-[52px] w-full items-center justify-center rounded-xl bg-slate-950 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-blue-600 hover:shadow-lg hover:shadow-blue-600/15 disabled:cursor-not-allowed disabled:opacity-60"
+                                className="group mt-1 flex h-[50px] w-full items-center justify-center rounded-lg bg-[#0f172e] text-[15px] font-semibold text-white transition-all duration-200 hover:bg-blue-600 hover:shadow-lg hover:shadow-blue-600/15 disabled:cursor-not-allowed disabled:opacity-60"
                             >
                                 {formik.isSubmitting
                                     ? "Please wait..."
@@ -376,9 +433,12 @@ export default function CredentialsForms({
                                     />
                                 )}
                             </button>
+
                         </form>
 
-                        <div className="mt-5 text-center text-sm text-slate-500">
+                        {/* Login / Signup Toggle */}
+                        <div className="mt-5 text-center text-[14px] text-slate-500">
+
                             {isLogin
                                 ? "Don't have an account?"
                                 : "Already have an account?"}
@@ -386,30 +446,36 @@ export default function CredentialsForms({
                             <button
                                 type="button"
                                 onClick={toggleMode}
-                                className="ml-1 font-semibold text-blue-600 hover:text-blue-700 hover:underline"
+                                className="ml-1 font-medium text-blue-600 underline decoration-transparent underline-offset-4 transition-all hover:decoration-blue-600"
                             >
                                 {isLogin
-                                    ? "Create one"
+                                    ? "Sign up"
                                     : "Sign in"}
                             </button>
+
                         </div>
 
-                        <div className="my-5 flex items-center gap-4">
+                        {/* Divider */}
+                        <div className="my-4 flex items-center gap-4">
+
                             <div className="h-px flex-1 bg-slate-200" />
 
-                            <span className="text-[11px] font-medium uppercase tracking-wider text-slate-400">
+                            <span className="text-xs font-medium uppercase tracking-wider text-slate-400">
                                 or
                             </span>
 
                             <div className="h-px flex-1 bg-slate-200" />
+
                         </div>
 
+                        {/* Google Authentication */}
                         <GoogleAuthButton
                             role={role}
                             onAuthSuccess={onAuthSuccess}
                         />
 
-                        <p className="mt-7 text-center text-xs leading-5 text-slate-400">
+                        {/* Terms and Privacy */}
+                        <p className="mt-5 text-center text-xs leading-5 text-slate-400">
                             By continuing, you agree to SeniorPro's{" "}
 
                             <span className="cursor-pointer text-slate-600 hover:underline">
@@ -424,8 +490,11 @@ export default function CredentialsForms({
                         </p>
 
                     </div>
-                </div>
+
+                </section>
+
             </main>
+
         </div>
     );
 }
