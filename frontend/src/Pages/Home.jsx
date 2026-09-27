@@ -23,7 +23,7 @@ export default function Home() {
                     <div className="text-sm text-gray-300 text-center">
                         Get matched with consultancy, mentorship and advisory work that fits your experience.
                     </div>
-                    <button className="cursor-pointer text-sm font-medium rounded-md bg-white text-blue-950 px-3 py-1.5">Get Started</button>
+                    <a className="cursor-pointer text-sm font-medium rounded-md bg-white text-blue-950 px-3 py-1.5" href="/jobseekerProfile">Get Started</a>
                 </div>
                 <div className="bg-green-400 rounded-r-2xl p-10 space-y-2">
                 <div className="text-center text-2xl text-white">I'm hiring</div>
