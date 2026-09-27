@@ -32,7 +32,7 @@ function AppContent(){
     return (
         <>
             <BrowserRouter>
-                <div className="firstApp" style={{background: '#FFFFFF'}}>
+                <div className="firstApp">
                     {user && <Header user={user} onLogout={handleLogout} />}
                     <Routes>
                         <Route path='/login' element={
@@ -51,7 +51,8 @@ function AppContent(){
                             <Protected user={user} roles={['recruiter']} ><Employer /> </Protected>
                         } />
                         <Route path="/admin/*" element={
-                            <Protected user={user} roles={['admin']}><AdminPage /></Protected>
+                            <Protected user={user} //roles={['admin']}>
+                            ><AdminPage /></Protected>
                         } />
                         {/* <Route path="/login" element={<AuthPage onAuthSuccess={setUser} />} /> */}
                         <Route path= "*" element={<PageNotFound />}/>
@@ -65,7 +66,7 @@ function AppContent(){
 function App() {
     return (
         <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-            <AppContent />
+         <AppContent />
         </GoogleOAuthProvider>
     );
 }
