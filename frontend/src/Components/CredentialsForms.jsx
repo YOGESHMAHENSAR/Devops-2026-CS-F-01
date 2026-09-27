@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {useFormik} from "formik";
-import * as Yup from "Yup";
+import * as Yup from "yup";
 import { TextField, Button, Typography, Stack, Alert, Link, Divider} from '@mui/material';
 import GoogleAuthButton from './GoogleAuthButton.jsx';
 import {login, signup} from "../api/auth.js"
