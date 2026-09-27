@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 import { User } from "./user.model";
-const Schema = mongoose.Schema();
+const Schema = mongoose.Schema;
+
+// we can do import {Schema} from "mongoose"
+// or we can simply do const Schema = mongoose.Schema; without the mongoose.Schema();
+//as this make the call to the Schema instance which break the further formation of the main schema.
 
 const JobSeekerProfile = new Schema({
     userId: {
@@ -10,12 +14,12 @@ const JobSeekerProfile = new Schema({
         unique: true,
         index: true
     },
-    // name: {
-    //     type: String,
+    // name: { // we have alreay taken it in the user.model.js
+    //     type: String,++
     //     trim: true,
     //     required: true,
     // },
-    headline: {
+    headline: { // this is for the 1 line description of the user.
         type: String,
         trim: true
     },
@@ -26,7 +30,7 @@ const JobSeekerProfile = new Schema({
         type: Number,
         required: true,
         min: 0,
-        dafault: 0
+        default: 0
     },
     skills: {
         type: [String],
@@ -48,12 +52,12 @@ const JobSeekerProfile = new Schema({
     jobType: {
         type: String,
         enum: ["Consultancy", "Contract", "Advisory", "Part-time", "Full-time"],
-        default: ["Consultancy"]
+        default: "Consultancy"
     },
     mode: {
         type: String,
         enum: ["Remote", "Hybrid", "Online"],
-        default: ["Remote"]
+        default: "Remote"
     },
     location: {
         city: {
@@ -90,6 +94,6 @@ const JobSeekerProfile = new Schema({
 {timestamps: true}
 );
 
-const jobSeeker = mongoose.model("jobSeeker", JobSeekerProfile);
+const JobSeeker = mongoose.model("JobSeeker", JobSeekerProfile);
 
-export {jobSeeker};
+export {JobSeeker};
