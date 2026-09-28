@@ -12,7 +12,7 @@ const userSchema = new Schema({
     }, 
     name: {
         type: String,
-        unique: true,
+        // unique: true, // name should not be unique as we can have same name, but email-id is the main distinction
         trim: true
     },
     refreshToken: {
