@@ -1,0 +1,47 @@
+[
+  {
+    "testCase": "Valid Student Registration",
+    "username": "Alex Smith",
+    "email": "alex.smith@example.com",
+    "phone": "9876543210",
+    "branch": "CSE",
+    "password": "SecurePassword123!",
+    "expectedValid": true
+  },
+  {
+    "testCase": "Valid AI Branch Registration",
+    "username": "Jordan Lee",
+    "email": "jordan.lee@example.com",
+    "phone": "8765432109",
+    "branch": "CSE(AI)",
+    "password": "Password456#",
+    "expectedValid": true
+  },
+  {
+    "testCase": "Invalid - Missing Name & Email",
+    "username": "",
+    "email": "",
+    "phone": "9998887776",
+    "branch": "EE",
+    "password": "Password789!",
+    "expectedValid": false
+  },
+  {
+    "testCase": "Invalid - Incorrect Phone Format",
+    "username": "Taylor Reed",
+    "email": "taylor@example.com",
+    "phone": "123",
+    "branch": "ME",
+    "password": "Password123!",
+    "expectedValid": false
+  },
+  {
+    "testCase": "Invalid - Unselected Branch",
+    "username": "Morgan Cruz",
+    "email": "morgan@example.com",
+    "phone": "9123456789",
+    "branch": "",
+    "password": "Password123!",
+    "expectedValid": false
+  }
+]

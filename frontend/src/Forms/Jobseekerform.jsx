@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     User, Briefcase, Phone, Award, Link as LinkIcon, Building,
-    MapPin, Globe, Compass, DollarSign, Clock, CheckCircle,
+    MapPin, Globe, Compass, Banknote, Clock, CheckCircle,
     Eye, EyeOff, Sparkles, RefreshCw, Moon, Sun,
     X, FileText, ChevronDown
 } from 'lucide-react';
@@ -266,7 +266,7 @@ const MuiChipInput = ({ label, skills, onAddSkill, onDeleteSkill, required= fals
                     onKeyDown={handleKeyDown}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
-                    placeholder={skills.length === 0 ? "Type skill & press Enter (e.g. React, Node)" : "Add skill..."}
+                    placeholder={skills.length === 0 ? "Type skill & press Enter (e.g. Financial, Administrative)" : "Add skill..."}
                     className={`flex-1 min-w-30 text-sm outline-none bg-transparent ${
                         isDark ? 'text-white placeholder-gray-500' : 'text-gray-900 placeholder-gray-400'
                     }`}
@@ -300,7 +300,7 @@ export default function App() {
         headline: '',
         phoneNumber: '',
         experience: '',
-        skills: ['React', 'TypeScript', 'Tailwind CSS'],
+        skills: [],
         resumeUrl: '',
         industry: '',
         jobType: 'Consultancy',
@@ -679,7 +679,7 @@ export default function App() {
                                 {/* SECTION 3: EXPECTED SALARY */}
                                 <div className="mt-6 mb-6 pt-4 border-t border-dashed border-gray-300 dark:border-gray-800">
                                     <h3 className={`text-base font-bold flex items-center gap-2 mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                        <DollarSign size={18} className="text-[#1976d2]" />
+                                        <Banknote size={18} className="text-[#1976d2]" />
                                         Expected Salary:
                                     </h3>
 
@@ -690,7 +690,7 @@ export default function App() {
                                             value={formData.amount}
                                             onChange={handleChange}
                                             placeholder="e.g. 1500000"
-                                            icon={DollarSign}
+                                            icon={Banknote}
                                             error={errors.amount}
                                             type="number"
                                             required
@@ -809,7 +809,7 @@ export default function App() {
                                     {/* Expected Salary */}
                                     <div className="flex items-center justify-between">
                     <span className={`flex items-center gap-1.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                      <DollarSign size={14} /> Expected Salary:
+                      <Banknote size={14} /> Expected Salary:
                     </span>
                                         <span className="font-bold text-emerald-600 dark:text-emerald-400">
                       {formData.amount
