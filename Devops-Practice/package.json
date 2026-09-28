@@ -1,0 +1,30 @@
+{
+  "name": "devops",
+  "version": "1.0.0",
+  "description": "Student registration and login with JSON storage and Docker",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test test/*.test.js",
+    "test:fixtures": "node test-runner.js",
+    "test:cypress": "cypress run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YOGESHMAHENSAR/Devops-Learning.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YOGESHMAHENSAR/Devops-Learning/issues"
+  },
+  "homepage": "https://github.com/YOGESHMAHENSAR/Devops-Learning#readme",
+  "dependencies": {
+    "cypress": "^15.20.0",
+    "ejs": "^6.0.1",
+    "install": "^0.13.0"
+  },
+  "allowScripts": {
+    "cypress@15.20.0": true
+  }
+}

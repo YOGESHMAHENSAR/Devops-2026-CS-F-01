@@ -1,0 +1,15 @@
+services:
+  student-portal:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: "3000"
+      DATA_DIR: /app/data
+    volumes:
+      - student-data:/app/data
+    restart: unless-stopped
+    init: true
+
+volumes:
+  student-data:
