@@ -1,4 +1,4 @@
-const AUTH_API = "http://localhost:3000/feed/auth"; 
+const AUTH_API = `${import.meta.env.VITE_API_URL}/feed/auth`; 
 //url of express, feed/auth as the router of express is staring from this only.
 
 async function request(path, payload){
