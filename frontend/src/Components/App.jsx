@@ -3,26 +3,27 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import AuthPage from './AuthPage.jsx';
+import ForgotPassword from './ForgotPassword.jsx'
 import Header from './Header.jsx';
 import Protected from './Protected.jsx';
 
-import AdminPage from '../Pages/Admin.jsx';
+import AdminPage from '../Pages/Admin/Admin.jsx';
 import PageNotFound from '../Pages/PageNotFound.jsx';
 import Home from '../Pages/Home.jsx';
 import Opportunity from '../Pages/Opportunity.jsx'
 import Working from '../Pages/Working.jsx';
 import Employer from '../Pages/Employer.jsx';
 import Jobseekerform from '../Forms/Jobseekerform.jsx';
-import {logout as clearAuth} from "../api/auth.js";
-import {useState} from 'react';
+import { logout as clearAuth } from "../api/auth.js";
+import { useState } from 'react';
 
-function AppContent(){
-    let [user, setUser] = useState(() =>{
+function AppContent() {
+    let [user, setUser] = useState(() => {
         const saved = localStorage.getItem('user');
         return saved ? JSON.parse(saved) : null;
     })
-    
-    function handleLogout(){
+
+    function handleLogout() {
         clearAuth(); //remove the local storage material
         setUser(null);
     }
@@ -39,15 +40,19 @@ function AppContent(){
                         <Route path='/login' element={
                             user ? <Navigate to='/' replace /> : <AuthPage onAuthSuccess={setUser} />
                         } />
+                        <Route
+                            path="/forgot-password"
+                            element={<ForgotPassword />}
+                        />
                         <Route path="/" element={
-                            <Protected user={user}><Home /></Protected> 
-                        }/>
+                            <Protected user={user}><Home /></Protected>
+                        } />
                         <Route path="/jobseekerProfile" element={
                             <Protected user={user}><Jobseekerform /></Protected>
-                        }/>
+                        } />
                         <Route path="/Opportunity" element={
-                            <Protected user={user}><Opportunity/></Protected>
-                        }/>
+                            <Protected user={user}><Opportunity /></Protected>
+                        } />
                         <Route path="/working" element={
                             <Protected user={user} ><Working /></Protected>
                         } />
@@ -59,7 +64,7 @@ function AppContent(){
                             ><AdminPage /></Protected>
                         } />
                         {/* <Route path="/login" element={<AuthPage onAuthSuccess={setUser} />} /> */}
-                        <Route path= "*" element={<PageNotFound />}/>
+                        <Route path="*" element={<PageNotFound />} />
                     </Routes>
                 </div>
             </BrowserRouter>
@@ -70,7 +75,7 @@ function AppContent(){
 function App() {
     return (
         <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-         <AppContent />
+            <AppContent />
         </GoogleOAuthProvider>
     );
 }
