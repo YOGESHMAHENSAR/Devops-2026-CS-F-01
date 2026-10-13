@@ -1,13 +1,22 @@
+
 import { BriefcaseBusiness } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function Header({ user, onLogout }) {
+    const location = useLocation();
+
+    if (location.pathname.startsWith("/admin")) {
+        return null;
+    }
+
     return (
         <>
             <div className="flex items-center justify-between px-10 py-3">
                 <Link to="/" className="flex items-center gap-2">
                     <BriefcaseBusiness size={24} className="text-blue-600" />
-                    <p className="text-xl font-bold text-black">SeniorPro</p>
+                    <p className="text-xl font-bold text-black">
+                        SeniorPro
+                    </p>
                 </Link>
 
                 <nav className="flex items-center gap-8">
@@ -27,14 +36,14 @@ export default function Header({ user, onLogout }) {
                         How it works
                     </Link>
 
-                    {/* {user?.role === "admin" && ( */}
-                        <Link to="/admin">
-                            Admin Page
-                        </Link>
-                    {/* )} */}
+                    <Link to="/admin">
+                        Admin Page
+                    </Link>
+
                 </nav>
 
                 <button
+                    type="button"
                     onClick={onLogout}
                     className="cursor-pointer rounded-lg border border-slate-300/75 bg-white px-3 py-1.5 text-sm text-black"
                 >
