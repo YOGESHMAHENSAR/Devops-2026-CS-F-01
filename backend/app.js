@@ -7,7 +7,8 @@ dns.setServers(['8.8.8.8', '1.1.1.1']);
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import authRouter from "./src/routes/auth.js"
+import authRouter from "./src/routes/auth.js";
+import userInfo from "./src/routes/user.routes.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -38,6 +39,7 @@ app.use(express.json({limit: "40kb"}));
 app.use(express.urlencoded({limit: "40kb",extended: true}));
 
 app.use("/feed/auth", authRouter);
+app.use("/jobseeker", userInfo);
 // app.use("/feed/jobs", jobsRouter);
 
 // app.get("/home", (req, res)=>{

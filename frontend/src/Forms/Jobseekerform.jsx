@@ -302,7 +302,7 @@ export default function App() {
         experience: '',
         skills: [],
         resumeUrl: '',
-        industry: '',
+        industry: [],
         jobType: 'Consultancy',
         mode: 'Remote',
         country: 'INDIA',
@@ -359,7 +359,7 @@ export default function App() {
             experience: '',
             skills: [],
             resumeUrl: '',
-            industry: '',
+            industry: [],
             jobType: 'Consultancy',
             mode: 'Remote',
             country: 'INDIA',
@@ -385,9 +385,9 @@ export default function App() {
         if (!formData.resumeUrl || !/^https?:\/\/.+/.test(formData.resumeUrl)) {
             newErrors.resumeUrl = 'URL must start with http:// or https://';
         }
-        if (!formData.industry) {
-            newErrors.industry = 'Please provide your respective industry';
-        }
+        // if (!formData.industry) {
+        //     newErrors.industry = 'Please provide your respective industry';
+        // }
         if (!formData.city) {
             newErrors.city = 'Please provide your city';
         }
@@ -399,11 +399,34 @@ export default function App() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (validate()) {
-            setIsSubmitted(true);
-            setToastMessage('🎉 Profile details saved successfully!');
+            const token = localStorage.getItem("token");
+            console.log("token is: ", token);
+            if(!token){
+                alert("Please login First!");
+                return;
+            }
+            try{
+                const res = await fetch("http://localhost:5000/jobseeker/profile", {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify(formData)
+                })
+                const data = await res.json();
+
+                if(!data) throw new Error(data.message);
+
+                setIsSubmitted(true);
+                setToastMessage('🎉 Profile details saved successfully!');
+            }
+            catch(error){
+                console.error("Submit error:", err.message);
+            }
         } else {
             setToastMessage('⚠️ Please fix the highlighted errors in the form.');
         }
