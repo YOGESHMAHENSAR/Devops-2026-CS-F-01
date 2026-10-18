@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { User } from "./user.model";
+import { User } from "./user.model.js";
 const Schema = mongoose.Schema;
 
 // we can do import {Schema} from "mongoose"
@@ -47,7 +47,16 @@ const JobSeekerProfile = new Schema({
         type: [String],
         required: true,
         default: [],
-        set: (industry) => industry.map(ind => ind.trim())
+        set: (industry) => industry.map(ind => ind.trim()),
+        // set: (val) => { //to overcome the problem of the string and array as the datatype, as in jobseeker form we have industry as of the string
+        //     if (Array.isArray(val)) {
+        //     return val.map((ind) => ind.trim()).filter(Boolean);
+        //     }
+        //     if (typeof val === 'string' && val.trim()) {
+        //     return val.split(',').map((ind) => ind.trim()).filter(Boolean);
+        //     }
+        //     return [];
+        // }
     },
     jobType: {
         type: String,
@@ -94,6 +103,6 @@ const JobSeekerProfile = new Schema({
 {timestamps: true}
 );
 
-const JobSeeker = mongoose.model("JobSeeker", JobSeekerProfile);
+const jobSeeker = mongoose.model("JobSeeker", JobSeekerProfile);
 
-export {JobSeeker};
+export {jobSeeker};
