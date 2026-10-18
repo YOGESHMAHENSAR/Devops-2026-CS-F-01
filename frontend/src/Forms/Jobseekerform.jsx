@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     User, Briefcase, Phone, Award, Link as LinkIcon, Building,
     MapPin, Globe, Compass, Banknote, Clock, CheckCircle,
@@ -97,7 +97,7 @@ const MuiTextField = ({
                 {/* Start Icon */}
                 {Icon && (
                     <div className={`pl-3 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                        <Icon size={18} />
+                        <Icon size={18}/>
                     </div>
                 )}
 
@@ -165,7 +165,7 @@ const MuiSelect = ({
 
                 {Icon && (
                     <div className={`pl-3 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                        <Icon size={18} />
+                        <Icon size={18}/>
                     </div>
                 )}
 
@@ -182,11 +182,13 @@ const MuiSelect = ({
                     {!hasValue && <option value="" disabled hidden>Select {label}</option>}
                     {options.map((opt, idx) => (
                         typeof opt === 'string' ? (
-                            <option key={idx} value={opt} className={isDark ? 'bg-[#1e1e1e] text-white' : 'bg-white text-gray-900'}>
+                            <option key={idx} value={opt}
+                                    className={isDark ? 'bg-[#1e1e1e] text-white' : 'bg-white text-gray-900'}>
                                 {opt}
                             </option>
                         ) : (
-                            <option key={opt.code || idx} value={opt.code} className={isDark ? 'bg-[#1e1e1e] text-white' : 'bg-white text-gray-900'}>
+                            <option key={opt.code || idx} value={opt.code}
+                                    className={isDark ? 'bg-[#1e1e1e] text-white' : 'bg-white text-gray-900'}>
                                 {opt.flag ? `${opt.flag}  ` : ''}{opt.name} {opt.symbol ? `(${opt.symbol})` : ''}
                             </option>
                         )
@@ -194,14 +196,23 @@ const MuiSelect = ({
                 </select>
 
                 <div className="absolute right-3 pointer-events-none text-gray-500">
-                    <ChevronDown size={18} />
+                    <ChevronDown size={18}/>
                 </div>
             </div>
         </div>
     );
 };
 
-const MuiChipInput = ({ label, skills, onAddSkill, onDeleteSkill, required= false, isDark= false }) => {
+const MuiChipInput = ({
+                          label,
+                          parameter,
+                          placeholder,
+                          inputs,
+                          onAddInput,
+                          onDeleteChoices,
+                          required = false,
+                          isDark = false
+                      }) => {
     const [inputValue, setInputValue] = useState('');
     const [isFocused, setIsFocused] = useState(false);
 
@@ -209,7 +220,7 @@ const MuiChipInput = ({ label, skills, onAddSkill, onDeleteSkill, required= fals
         if (e.key === 'Enter' || e.key === ',') {
             e.preventDefault();
             if (inputValue.trim()) {
-                onAddSkill(inputValue.trim());
+                onAddInput(inputValue.trim(), parameter);
                 setInputValue('');
             }
         }
@@ -217,7 +228,7 @@ const MuiChipInput = ({ label, skills, onAddSkill, onDeleteSkill, required= fals
 
     const handleAddBtn = () => {
         if (inputValue.trim()) {
-            onAddSkill(inputValue.trim());
+            onAddInput(inputValue.trim(), parameter);
             setInputValue('');
         }
     };
@@ -243,20 +254,20 @@ const MuiChipInput = ({ label, skills, onAddSkill, onDeleteSkill, required= fals
                     {label} {required && <span className="text-red-500">*</span>}
                 </label>
 
-                {skills.map((skill, index) => (
+                {inputs.map((choice, index) => (
                     <span
                         key={index}
                         className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#e3f2fd] text-[#1976d2] dark:bg-[#0d47a1]/40 border border-[#90caf9]/50 animate-fadeIn"
                     >
-            {skill}
+                        {choice}
                         <button
                             type="button"
-                            onClick={() => onDeleteSkill(skill)}
+                            onClick={() => onDeleteChoices(choice, parameter)}
                             className="hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full p-0.5 transition-colors"
                         >
-              <X size={12} />
-            </button>
-          </span>
+                        <X size={12}/>
+                        </button>
+                    </span>
                 ))}
 
                 <input
@@ -266,7 +277,7 @@ const MuiChipInput = ({ label, skills, onAddSkill, onDeleteSkill, required= fals
                     onKeyDown={handleKeyDown}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
-                    placeholder={skills.length === 0 ? "Type skill & press Enter (e.g. Financial, Administrative)" : "Add skill..."}
+                    placeholder={inputs.length === 0 ? placeholder : `Add ${parameter}...`}
                     className={`flex-1 min-w-30 text-sm outline-none bg-transparent ${
                         isDark ? 'text-white placeholder-gray-500' : 'text-gray-900 placeholder-gray-400'
                     }`}
@@ -324,25 +335,25 @@ export default function App() {
     }, [toastMessage]);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        const {name, value} = e.target;
+        setFormData((prev) => ({...prev, [name]: value}));
 
         // Clear error on change
         if (errors[name]) {
-            setErrors((prev) => ({ ...prev, [name]: null }));
+            setErrors((prev) => ({...prev, [name]: null}));
         }
     };
 
-    const handleAddSkill = (newSkill) => {
-        if (!formData.skills.includes(newSkill)) {
-            setFormData((prev) => ({ ...prev, skills: [...prev.skills, newSkill] }));
+    const handleAddInput = (inputValue, parameter) => {
+        if (!formData.skills.includes(inputValue)) {
+            setFormData((prev) => ({...prev, [parameter]: [...prev[parameter], inputValue.trim()]}));
         }
     };
 
-    const handleDeleteSkill = (skillToRemove) => {
+    const handleDeleteChoices = (choiceToRemove, parameter) => {
         setFormData((prev) => ({
             ...prev,
-            skills: prev.skills.filter((s) => s !== skillToRemove)
+            [parameter]: prev[parameter].filter((s) => s !== choiceToRemove)
         }));
     };
 
@@ -385,9 +396,9 @@ export default function App() {
         if (!formData.resumeUrl || !/^https?:\/\/.+/.test(formData.resumeUrl)) {
             newErrors.resumeUrl = 'URL must start with http:// or https://';
         }
-        // if (!formData.industry) {
-        //     newErrors.industry = 'Please provide your respective industry';
-        // }
+        if (!formData.industry) {
+            newErrors.industry = 'Please provide your respective industry';
+        }
         if (!formData.city) {
             newErrors.city = 'Please provide your city';
         }
@@ -403,7 +414,7 @@ export default function App() {
         e.preventDefault();
         if (validate()) {
             const token = localStorage.getItem("token");
-            console.log("token is: ", token);
+            // console.log("token is: ", token);
             if(!token){
                 alert("Please login First!");
                 return;
@@ -441,20 +452,23 @@ export default function App() {
     const progressPercent = Math.round((completedFieldsCount / totalFields) * 100);
 
     return (
-        <div className={`min-h-screen font-sans transition-colors duration-300 ${isDark ? 'bg-[#121212] text-gray-100' : 'bg-[#f4f6f8] text-gray-800'}`}>
+        <div
+            className={`min-h-screen font-sans transition-colors duration-300 ${isDark ? 'bg-[#121212] text-gray-100' : 'bg-[#f4f6f8] text-gray-800'}`}>
 
             {/* MUI Top Navigation Bar */}
-            <header className={`sticky top-0 z-30 shadow-md transition-colors ${isDark ? 'bg-[#1e1e1e] border-b border-gray-800' : 'bg-[#1976d2] text-white'}`}>
+            <header
+                className={`static top-0 z-30 shadow-md transition-colors ${isDark ? 'bg-[#1e1e1e] border-b border-gray-800' : 'bg-[#1976d2] text-white'}`}>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
-                            <User className="text-white" size={24} />
+                            <User className="text-white" size={24}/>
                         </div>
                         <div>
                             <h3 className={`text-lg font-bold tracking-tight flex items-center gap-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                Manage Profile Details
+                                Apply for Job
                             </h3>
-                            <p className="text-xs text-blue-100 opacity-90 hidden sm:block">Update your professional background & job preferences</p>
+                            <p className="text-xs text-blue-100 opacity-90 hidden sm:block">Update your professional
+                                background & job preferences</p>
                         </div>
                     </div>
 
@@ -476,7 +490,7 @@ export default function App() {
                                     : 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
                             }`}
                         >
-                            {showPreview ? <EyeOff size={14} /> : <Eye size={14} />}
+                            {showPreview ? <EyeOff size={14}/> : <Eye size={14}/>}
                             <span className="hidden sm:inline">{showPreview ? 'Hide Preview' : 'Live Card'}</span>
                         </button>
 
@@ -485,7 +499,7 @@ export default function App() {
                             className="p-2 rounded-full hover:bg-white/10 text-white transition"
                             title="Toggle Light/Dark Theme"
                         >
-                            {isDark ? <Sun size={18} className="text-amber-300" /> : <Moon size={18} />}
+                            {isDark ? <Sun size={18} className="text-amber-300"/> : <Moon size={18}/>}
                         </button>
                     </div>
                 </div>
@@ -494,7 +508,7 @@ export default function App() {
                 <div className="w-full bg-black/10 h-1">
                     <div
                         className="bg-emerald-400 h-1 transition-all duration-500 ease-out"
-                        style={{ width: `${progressPercent}%` }}
+                        style={{width: `${progressPercent}%`}}
                     />
                 </div>
             </header>
@@ -505,7 +519,8 @@ export default function App() {
                 {/* Toast Notification */}
                 {toastMessage && (
                     <div className="fixed bottom-6 right-6 z-50 animate-bounce transition-all">
-                        <div className="bg-gray-900 text-white text-sm px-4 py-3 rounded-lg shadow-xl flex items-center gap-2 border border-gray-700">
+                        <div
+                            className="bg-gray-900 text-white text-sm px-4 py-3 rounded-lg shadow-xl flex items-center gap-2 border border-gray-700">
                             <span>{toastMessage}</span>
                         </div>
                     </div>
@@ -514,17 +529,19 @@ export default function App() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
                     {/* Main MUI Form Card (8 Cols or 12 Cols depending on preview) */}
-                    <div className={`transition-all duration-300 ${showPreview ? 'lg:col-span-7 xl:col-span-8' : 'lg:col-span-12'}`}>
+                    <div
+                        className={`transition-all duration-300 ${showPreview ? 'lg:col-span-7 xl:col-span-8' : 'lg:col-span-12'}`}>
 
                         <div className={`rounded-xl shadow-lg transition-colors border ${
                             isDark ? 'bg-[#1e1e1e] border-gray-800' : 'bg-white border-gray-200/80'
                         }`}>
 
                             {/* MUI Card Header */}
-                            <div className={`p-6 border-b flex flex-wrap items-center justify-between gap-4 ${isDark ? 'border-gray-800' : 'border-gray-100'}`}>
+                            <div
+                                className={`p-6 border-b flex flex-wrap items-center justify-between gap-4 ${isDark ? 'border-gray-800' : 'border-gray-100'}`}>
                                 <div>
                                     <h3 className={`text-xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                        Manage Your Profile Details
+                                        Apply for Job
                                     </h3>
                                     <p className={`text-xs mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                                         Please complete your basic profile, location and expected salary details.
@@ -541,15 +558,15 @@ export default function App() {
                                                 : 'border-gray-300 text-gray-600 hover:bg-gray-100'
                                         }`}
                                     >
-                                        <RefreshCw size={12} /> Clear
+                                        <RefreshCw size={12}/> Clear
                                     </button>
                                     <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
                                         progressPercent === 100
                                             ? `${!isDark ? 'bg-emerald-100 text-emerald-800' : 'bg-emerald-700/30 text-emerald-100'}`
                                             : 'bg-blue-50 text-blue-700 dark:bg-blue-900/30'
                                     }`}>
-                    {progressPercent}% Completed
-                  </span>
+                                    {progressPercent}% Completed
+                                    </span>
                                 </div>
                             </div>
 
@@ -603,9 +620,11 @@ export default function App() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <MuiChipInput
                                         label="Skills"
-                                        skills={formData.skills}
-                                        onAddSkill={handleAddSkill}
-                                        onDeleteSkill={handleDeleteSkill}
+                                        parameter="skills"
+                                        placeholder="Type skill & press Enter (e.g. Financial, Administrative)"
+                                        inputs={formData.skills}
+                                        onAddInput={handleAddInput}
+                                        onDeleteChoices={handleDeleteChoices}
                                         required
                                         isDark={isDark}
                                     />
@@ -624,14 +643,13 @@ export default function App() {
 
                                 {/* Row 4: Industry */}
                                 <div className="grid grid-cols-1 gap-4">
-                                    <MuiTextField
+                                    <MuiChipInput
                                         label="Industry"
-                                        name="industry"
-                                        value={formData.industry}
-                                        onChange={handleChange}
-                                        placeholder="e.g. Information Technology, Healthcare, Finance"
-                                        icon={Building}
-                                        error={errors.industry}
+                                        parameter="industry"
+                                        placeholder="Select your industry (e.g. Finance, Healthcare)"
+                                        inputs={formData.industry}
+                                        onAddInput={handleAddInput}
+                                        onDeleteChoices={handleDeleteChoices}
                                         required
                                         isDark={isDark}
                                     />
@@ -661,9 +679,10 @@ export default function App() {
                                 </div>
 
                                 {/* SECTION 2: LOCATION */}
-                                <div className="mt-6 mb-4 pt-4 border-t border-dashed border-gray-300 dark:border-gray-800">
+                                <div
+                                    className="mt-6 mb-4 pt-4 border-t border-dashed border-gray-300 dark:border-gray-800">
                                     <h3 className={`text-base font-bold flex items-center gap-2 mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                        <MapPin size={18} className="text-[#1976d2]" />
+                                        <MapPin size={18} className="text-[#1976d2]"/>
                                         Location:
                                     </h3>
 
@@ -700,9 +719,10 @@ export default function App() {
                                 </div>
 
                                 {/* SECTION 3: EXPECTED SALARY */}
-                                <div className="mt-6 mb-6 pt-4 border-t border-dashed border-gray-300 dark:border-gray-800">
+                                <div
+                                    className="mt-6 mb-6 pt-4 border-t border-dashed border-gray-300 dark:border-gray-800">
                                     <h3 className={`text-base font-bold flex items-center gap-2 mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                        <Banknote size={18} className="text-[#1976d2]" />
+                                        <Banknote size={18} className="text-[#1976d2]"/>
                                         Expected Salary:
                                     </h3>
 
@@ -746,35 +766,33 @@ export default function App() {
                                         type="submit"
                                         className="w-full sm:w-auto min-w-[180px] bg-[#1976d2] hover:bg-[#1565c0] active:bg-[#0d47a1] text-white font-medium text-sm py-2.5 px-8 rounded shadow-md hover:shadow-lg uppercase tracking-wider transition-all duration-200 transform active:scale-95 flex items-center justify-center gap-2"
                                     >
-                                        <CheckCircle size={18} />
+                                        <CheckCircle size={18}/>
                                         Submit
                                     </button>
                                 </div>
-
                             </form>
                         </div>
                     </div>
 
                     {}
                     {showPreview && (
-                        <div className="lg:col-span-5 xl:col-span-4 sticky top-24">
+                        <div className="lg:col-span-5 xl:col-span-4 static top-24">
                             <div className={`rounded-xl shadow-lg border p-6 transition-colors ${
                                 isDark ? 'bg-[#1e1e1e] border-gray-800' : 'bg-white border-gray-200/80'
                             }`}>
 
                                 {/* Header Badge */}
                                 <div className="flex items-center justify-between pb-4 border-b border-gray-200 dark:border-gray-800">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-[#1976d2] flex items-center gap-1.5">
-                    <Sparkles size={14} /> Live Profile Card
-                  </span>
-                                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${!isDark ? 'bg-emerald-100 text-emerald-800' : 'bg-emerald-700/30 text-emerald-100'}`}>
-                    Active Preview
-                  </span>
+                                    <span className="text-xs font-semibold uppercase tracking-wider text-[#1976d2] flex items-center gap-1.5">
+                                        <Sparkles size={14}/> Live Profile Card
+                                    </span>
+                                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${!isDark ? 'bg-emerald-100 text-emerald-800' : 'bg-emerald-700/30 text-emerald-100'}`}>Active Preview</span>
                                 </div>
 
                                 {/* Card Main Info */}
                                 <div className="mt-4 text-center pb-5 border-b border-gray-200 dark:border-gray-800">
-                                    <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#1976d2] to-indigo-500 text-white text-xl font-bold flex items-center justify-center mx-auto shadow-md mb-3">
+                                    <div
+                                        className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#1976d2] to-indigo-500 text-white text-xl font-bold flex items-center justify-center mx-auto shadow-md mb-3">
                                         {formData.headline ? formData.headline.charAt(0).toUpperCase() : 'P'}
                                     </div>
 
@@ -785,13 +803,13 @@ export default function App() {
                                     <div className="flex flex-wrap items-center justify-center gap-2 mt-2">
                                         {formData.jobType && (
                                             <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 dark:bg-blue-900/30 font-medium">
-                        {formData.jobType}
-                      </span>
+                                                {formData.jobType}
+                                            </span>
                                         )}
                                         {formData.mode && (
                                             <span className="text-xs px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 dark:bg-purple-900/30 font-medium">
-                        {formData.mode}
-                      </span>
+                                                {formData.mode}
+                                            </span>
                                         )}
                                     </div>
                                 </div>
@@ -801,71 +819,72 @@ export default function App() {
 
                                     {/* Experience */}
                                     <div className="flex items-center justify-between">
-                    <span className={`flex items-center gap-1.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                      <Award size={14} /> Experience:
-                    </span>
-                                        <span className={`font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
-                      {formData.experience ? `${formData.experience} Years` : 'Not specified'}
-                    </span>
-                                    </div>
+                                        <span className={`flex items-center gap-1.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                          <Award size={14}/> Experience:
+                                        </span>
+                                                            <span className={`font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                                          {formData.experience ? `${formData.experience} Years` : 'Not specified'}
+                                        </span>
+                                                        </div>
 
-                                    {/* Industry */}
-                                    <div className="flex items-center justify-between">
-                    <span className={`flex items-center gap-1.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                      <Building size={14} /> Industry:
-                    </span>
-                                        <span className={`font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
-                      {formData.industry || 'Not specified'}
-                    </span>
-                                    </div>
+                                                        {/* Industry */}
+                                                        <div className="flex items-center justify-between">
+                                        <span className={`flex items-center gap-1.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                          <Building size={14}/> Industry:
+                                        </span>
+                                                            <span className={`font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                                          {formData.industry || 'Not specified'}
+                                        </span>
+                                                        </div>
 
-                                    {/* Location */}
-                                    <div className="flex items-center justify-between">
-                    <span className={`flex items-center gap-1.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                      <MapPin size={14} /> Location:
-                    </span>
-                                        <span className={`font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
-                      {[formData.city, formData.state, formData.country].filter(Boolean).join(', ') || 'INDIA'}
-                    </span>
+                                                        {/* Location */}
+                                                        <div className="flex items-center justify-between">
+                                        <span className={`flex items-center gap-1.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                          <MapPin size={14}/> Location:
+                                        </span>
+                                                            <span className={`font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                                          {[formData.city, formData.state, formData.country].filter(Boolean).join(', ') || 'INDIA'}
+                                        </span>
                                     </div>
 
                                     {/* Expected Salary */}
                                     <div className="flex items-center justify-between">
-                    <span className={`flex items-center gap-1.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                      <Banknote size={14} /> Expected Salary:
-                    </span>
+
+                                        <span className={`flex items-center gap-1.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            <Banknote size={14}/> Expected Salary:
+                                        </span>
                                         <span className="font-bold text-emerald-600 dark:text-emerald-400">
-                      {formData.amount
-                          ? `${formData.currency} ${Number(formData.amount).toLocaleString()} / ${formData.duration}`
-                          : 'Not set'}
-                    </span>
+                                            {formData.amount
+                                                ? `${formData.currency} ${Number(formData.amount).toLocaleString()} / ${formData.duration}`
+                                                : 'Not set'}
+                                        </span>
                                     </div>
 
                                     {/* Phone */}
                                     {formData.phoneNumber && (
                                         <div className="flex items-center justify-between">
-                      <span className={`flex items-center gap-1.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                        <Phone size={14} /> Phone:
-                      </span>
+                                            <span className={`flex items-center gap-1.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                                <Phone size={14}/> Phone:
+                                            </span>
                                             <span className={`font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
-                        {formData.phoneNumber}
-                      </span>
+                                                {formData.phoneNumber}
+                                            </span>
                                         </div>
                                     )}
 
                                     {/* Resume link */}
                                     {formData.resumeUrl && (
                                         <div className="flex items-center justify-between">
-                      <span className={`flex items-center gap-1.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                        <FileText size={14} /> Resume:
-                      </span>
+                                        <span className={`flex items-center gap-1.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            <FileText size={14}/> Resume:
+                                        </span>
                                             <a
                                                 href={formData.resumeUrl}
                                                 target="_blank"
                                                 rel="noreferrer"
                                                 className="text-[#1976d2] hover:underline flex items-center gap-1"
                                             >
-                                                View Link <LinkIcon size={10} />
+                                                View Link <LinkIcon size={10}/>
                                             </a>
                                         </div>
                                     )}
@@ -880,8 +899,8 @@ export default function App() {
                                         {formData.skills.length > 0 ? (
                                             formData.skills.map((s, i) => (
                                                 <span key={i} className="text-[11px] px-2 py-0.5 rounded bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
-                          {s}
-                        </span>
+                                                    {s}
+                                                </span>
                                             ))
                                         ) : (
                                             <span className="text-xs text-gray-400 italic">No skills added yet</span>
@@ -892,65 +911,8 @@ export default function App() {
                             </div>
                         </div>
                     )}
-
                 </div>
             </main>
-
-            {/* {}
-            {isSubmitted && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-                    <div className={`w-full max-w-lg rounded-xl shadow-2xl p-6 border ${
-                        isDark ? 'bg-[#1e1e1e] border-gray-800 text-white' : 'bg-white border-gray-100 text-gray-900'
-                    }`}>
-                        <div className="flex items-center justify-between pb-3 border-b border-gray-200 dark:border-gray-800">
-                            <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
-                                <CheckCircle size={22} />
-                                <h3 className="font-bold text-lg">Profile Submitted Successfully</h3>
-                            </div>
-                            <button
-                                onClick={() => setIsSubmitted(false)}
-                                className="text-gray-400 hover:text-gray-600 dark:hover:text-white p-1"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-
-                        <div className="mt-4">
-                            <p className={`text-xs mb-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                Here is the JSON payload structure generated from your profile details:
-                            </p>
-
-                            <pre className="p-3 rounded-lg text-xs font-mono bg-gray-950 text-emerald-400 overflow-x-auto max-h-60 border border-gray-800">
-                {JSON.stringify(formData, null, 2)}
-              </pre>
-                        </div>
-
-                        <div className="mt-6 flex justify-end gap-3">
-                            <button
-                                onClick={() => {
-                                    navigator.clipboard.writeText(JSON.stringify(formData, null, 2));
-                                    setToastMessage('Copied JSON to clipboard!');
-                                }}
-                                className={`px-4 py-2 text-xs font-medium rounded border transition flex items-center gap-1.5 ${
-                                    isDark
-                                        ? 'border-gray-700 text-gray-300 hover:bg-gray-800'
-                                        : 'border-gray-300 text-gray-700 hover:bg-gray-100'
-                                }`}
-                            >
-                                <Copy size={14} /> Copy JSON
-                            </button>
-
-                            <button
-                                onClick={() => setIsSubmitted(false)}
-                                className="px-5 py-2 text-xs font-medium rounded bg-[#1976d2] text-white hover:bg-[#1565c0] transition"
-                            >
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )} */}
-
         </div>
     );
 }

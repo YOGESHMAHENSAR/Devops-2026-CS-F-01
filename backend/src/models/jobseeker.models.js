@@ -47,16 +47,16 @@ const JobSeekerProfile = new Schema({
         type: [String],
         required: true,
         default: [],
-        // set: (industry) => industry.map(ind => ind.trim()),
-        set: (val) => { //to overcome the problem of the string and array as the datatype, as in jobseeker form we have industry as of the string
-            if (Array.isArray(val)) {
-            return val.map((ind) => ind.trim()).filter(Boolean);
-            }
-            if (typeof val === 'string' && val.trim()) {
-            return val.split(',').map((ind) => ind.trim()).filter(Boolean);
-            }
-            return [];
-        }
+        set: (industry) => industry.map(ind => ind.trim()),
+        // set: (val) => { //to overcome the problem of the string and array as the datatype, as in jobseeker form we have industry as of the string
+        //     if (Array.isArray(val)) {
+        //     return val.map((ind) => ind.trim()).filter(Boolean);
+        //     }
+        //     if (typeof val === 'string' && val.trim()) {
+        //     return val.split(',').map((ind) => ind.trim()).filter(Boolean);
+        //     }
+        //     return [];
+        // }
     },
     jobType: {
         type: String,
