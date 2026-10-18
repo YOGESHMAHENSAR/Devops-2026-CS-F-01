@@ -2,5 +2,6 @@ backend/node_modules/
 .env
 .idea/
 frontend/node_modules/
+frontend/dist
 dist/
 build/
