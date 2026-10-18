@@ -291,7 +291,7 @@ export default function CredentialsForms({
 
                                     <Mail
                                         size={19}
-                                        className="shrink-0 text-slate-400"
+                                        className="shrink-0 text-slate-400 me-2"
                                     />
 
                                     <input
@@ -350,7 +350,7 @@ export default function CredentialsForms({
 
                                     <Lock
                                         size={19}
-                                        className="shrink-0 text-slate-400"
+                                        className="shrink-0 text-slate-400 me-2"
                                     />
 
                                     <input
