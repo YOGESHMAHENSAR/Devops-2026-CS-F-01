@@ -10,7 +10,7 @@ import cors from "cors";
 import authRouter from "./src/routes/auth.js"
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const dbUrl = process.env.ATLAS_DB_URL;
 
@@ -30,7 +30,7 @@ async function main(){
 
 //for cross-origin-resourse-sharing of the frontend and backend route
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
     credentials: true,
 }));
 

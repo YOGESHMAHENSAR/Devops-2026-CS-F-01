@@ -4,12 +4,20 @@ import React from "react";
 import ProfileDropdown from "./ProfileDropdown.jsx";
 
 export default function Header({ user, onLogout }) {
+    const location = useLocation();
+
+    if (location.pathname.startsWith("/admin")) {
+        return null;
+    }
+
     return (
         <>
             <div className="flex items-center justify-between px-10 py-3 bg-white">
                 <Link to="/" className="flex items-center gap-2">
                     <BriefcaseBusiness size={24} className="text-blue-600" />
-                    <p className="text-xl font-bold text-black">SeniorPro</p>
+                    <p className="text-xl font-bold text-black">
+                        SeniorPro
+                    </p>
                 </Link>
 
                 <nav className="flex items-center gap-8">
