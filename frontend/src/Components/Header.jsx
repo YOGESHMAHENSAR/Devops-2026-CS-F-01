@@ -1,5 +1,5 @@
 import { BriefcaseBusiness, User } from "lucide-react";
-import { useLocation,Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import React from "react";
 import ProfileDropdown from "./ProfileDropdown.jsx";
 
