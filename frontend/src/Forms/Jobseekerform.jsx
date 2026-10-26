@@ -410,11 +410,34 @@ export default function App() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (validate()) {
-            setIsSubmitted(true);
-            setToastMessage('🎉 Profile details saved successfully!');
+            const token = localStorage.getItem("token");
+            // console.log("token is: ", token);
+            if(!token){
+                alert("Please login First!");
+                return;
+            }
+            try{
+                const res = await fetch("http://localhost:5000/jobseeker/profile", {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify(formData)
+                })
+                const data = await res.json();
+
+                if(!data) throw new Error(data.message);
+
+                setIsSubmitted(true);
+                setToastMessage('🎉 Profile details saved successfully!');
+            }
+            catch(error){
+                console.error("Submit error:", err.message);
+            }
         } else {
             setToastMessage('⚠️ Please fix the highlighted errors in the form.');
         }
@@ -834,62 +857,6 @@ export default function App() {
                     )}
                 </div>
             </main>
-
-            {/* {}
-            {isSubmitted && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-                    <div className={`w-full max-w-lg rounded-xl shadow-2xl p-6 border ${
-                        isDark ? 'bg-[#1e1e1e] border-gray-800 text-white' : 'bg-white border-gray-100 text-gray-900'
-                    }`}>
-                        <div className="flex items-center justify-between pb-3 border-b border-gray-200 dark:border-gray-800">
-                            <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
-                                <CheckCircle size={22} />
-                                <h3 className="font-bold text-lg">Profile Submitted Successfully</h3>
-                            </div>
-                            <button
-                                onClick={() => setIsSubmitted(false)}
-                                className="text-gray-400 hover:text-gray-600 dark:hover:text-white p-1"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-
-                        <div className="mt-4">
-                            <p className={`text-xs mb-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                Here is the JSON payload structure generated from your profile details:
-                            </p>
-
-                            <pre className="p-3 rounded-lg text-xs font-mono bg-gray-950 text-emerald-400 overflow-x-auto max-h-60 border border-gray-800">
-                {JSON.stringify(formData, null, 2)}
-              </pre>
-                        </div>
-
-                        <div className="mt-6 flex justify-end gap-3">
-                            <button
-                                onClick={() => {
-                                    navigator.clipboard.writeText(JSON.stringify(formData, null, 2));
-                                    setToastMessage('Copied JSON to clipboard!');
-                                }}
-                                className={`px-4 py-2 text-xs font-medium rounded border transition flex items-center gap-1.5 ${
-                                    isDark
-                                        ? 'border-gray-700 text-gray-300 hover:bg-gray-800'
-                                        : 'border-gray-300 text-gray-700 hover:bg-gray-100'
-                                }`}
-                            >
-                                <Copy size={14} /> Copy JSON
-                            </button>
-
-                            <button
-                                onClick={() => setIsSubmitted(false)}
-                                className="px-5 py-2 text-xs font-medium rounded bg-[#1976d2] text-white hover:bg-[#1565c0] transition"
-                            >
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )} */}
-
         </div>
     );
 }
