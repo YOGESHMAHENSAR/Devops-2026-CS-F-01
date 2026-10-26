@@ -16,8 +16,8 @@ import Employer from '../Pages/Employer.jsx';
 import Jobseekerform from '../Forms/Jobseekerform.jsx';
 import ProfileForm from '../Forms/ProfileForm.jsx';
 import Profile from './Profile.jsx';
-import {logout as clearAuth} from "../api/auth.js";
-import {useState} from 'react';
+import { logout as clearAuth } from "../api/auth.js";
+import { useState } from 'react';
 
 function AppContent() {
     let [user, setUser] = useState(() => {
@@ -47,18 +47,18 @@ function AppContent() {
                             element={<ForgotPassword />}
                         />
                         <Route path="/" element={
-                            <Protected user={user}><Home /></Protected> 
-                        }/>
+                            <Protected user={user}><Home /></Protected>
+                        } />
                         <Route path="/jobseeker/profile" element={
                             <Protected user={user}><Jobseekerform /></Protected>
-                        }/>
+                        } />
                         <Route path="/profile" element={
                             <Profile user={user} />
-                        }/>
+                        } />
                         <Route path="/profile-form" element={
                             <Protected user={user}><ProfileForm /></Protected>
-                        }/>
-                        <Route path="/Opportunity" element={
+                        } />
+                        <Route path="/opportunity" element={
                             <Protected user={user}><Opportunity /></Protected>
                         } />
                         <Route path="/working" element={
