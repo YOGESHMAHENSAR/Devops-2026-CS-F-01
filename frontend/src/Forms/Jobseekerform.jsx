@@ -431,65 +431,6 @@ export default function App() {
     return (
         <div
             className={`min-h-screen font-sans transition-colors duration-300 ${isDark ? 'bg-[#121212] text-gray-100' : 'bg-[#f4f6f8] text-gray-800'}`}>
-
-            {/* MUI Top Navigation Bar */}
-            <header
-                className={`static top-0 z-30 shadow-md transition-colors ${isDark ? 'bg-[#1e1e1e] border-b border-gray-800' : 'bg-[#1976d2] text-white'}`}>
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
-                            <User className="text-white" size={24}/>
-                        </div>
-                        <div>
-                            <h3 className={`text-lg font-bold tracking-tight flex items-center gap-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                Apply for Job
-                            </h3>
-                            <p className="text-xs text-blue-100 opacity-90 hidden sm:block">Update your professional
-                                background & job preferences</p>
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                        {/*<button
-                            onClick={handleAutofill}
-                            className="px-3 py-1.5 text-xs font-medium rounded-md bg-white/10 hover:bg-white/20 text-white transition flex items-center gap-1.5 border border-white/20"
-                            title="Fill form with sample data"
-                        >
-                            <Sparkles size={14} />
-                            <span className="hidden md:inline">Auto Fill</span>
-                        </button>*/}
-
-                        <button
-                            onClick={() => setShowPreview(!showPreview)}
-                            className={`px-3 py-1.5 text-xs font-medium rounded-md transition flex items-center gap-1.5 ${
-                                showPreview
-                                    ? 'bg-white text-[#1976d2] shadow-sm'
-                                    : 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
-                            }`}
-                        >
-                            {showPreview ? <EyeOff size={14}/> : <Eye size={14}/>}
-                            <span className="hidden sm:inline">{showPreview ? 'Hide Preview' : 'Live Card'}</span>
-                        </button>
-
-                        <button
-                            onClick={() => setIsDark(!isDark)}
-                            className="p-2 rounded-full hover:bg-white/10 text-white transition"
-                            title="Toggle Light/Dark Theme"
-                        >
-                            {isDark ? <Sun size={18} className="text-amber-300"/> : <Moon size={18}/>}
-                        </button>
-                    </div>
-                </div>
-
-                {/* Form completion progress bar */}
-                <div className="w-full bg-black/10 h-1">
-                    <div
-                        className="bg-emerald-400 h-1 transition-all duration-500 ease-out"
-                        style={{width: `${progressPercent}%`}}
-                    />
-                </div>
-            </header>
-
             {/* Main Container */}
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
@@ -515,36 +456,39 @@ export default function App() {
 
                             {/* MUI Card Header */}
                             <div
-                                className={`p-6 border-b flex flex-wrap items-center justify-between gap-4 ${isDark ? 'border-gray-800' : 'border-gray-100'}`}>
+                                className={`p-6 border-b flex items-center justify-between ${isDark ? 'border-gray-800' : 'border-gray-100'}`}>
+                                <button
+                                    type="button"
+                                    onClick={handleReset}
+                                    className={`text-xs px-3 py-1.5 rounded transition flex items-center gap-1 border ${
+                                        isDark
+                                            ? 'border-gray-700 text-gray-300 hover:bg-gray-800'
+                                            : 'border-gray-300 text-gray-600 hover:bg-gray-100'
+                                    }`}
+                                >
+                                    <RefreshCw size={12}/> Clear
+                                </button>
                                 <div>
-                                    <h3 className={`text-xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                        Apply for Job
+                                    <h3 className={`text-xl font-bold tracking-tight flex items-center justify-center ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                        Apply for Job<span className={`text-xs px-2.5 py-1 rounded-full font-medium ms-5 ${
+                                            progressPercent === 100
+                                                ? `${!isDark ? 'bg-emerald-100 text-emerald-800' : 'bg-emerald-700/30 text-emerald-100'}`
+                                                : 'bg-blue-50 text-blue-700 dark:bg-blue-900/30'
+                                        }`}>
+                                        {progressPercent}% Completed
+                                        </span>
                                     </h3>
                                     <p className={`text-xs mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                                         Please complete your basic profile, location and expected salary details.
                                     </p>
                                 </div>
-
-                                <div className="flex items-center gap-2">
-                                    <button
-                                        type="button"
-                                        onClick={handleReset}
-                                        className={`text-xs px-3 py-1.5 rounded transition flex items-center gap-1 border ${
-                                            isDark
-                                                ? 'border-gray-700 text-gray-300 hover:bg-gray-800'
-                                                : 'border-gray-300 text-gray-600 hover:bg-gray-100'
-                                        }`}
-                                    >
-                                        <RefreshCw size={12}/> Clear
-                                    </button>
-                                    <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-                                        progressPercent === 100
-                                            ? `${!isDark ? 'bg-emerald-100 text-emerald-800' : 'bg-emerald-700/30 text-emerald-100'}`
-                                            : 'bg-blue-50 text-blue-700 dark:bg-blue-900/30'
-                                    }`}>
-                                    {progressPercent}% Completed
-                                    </span>
-                                </div>
+                                <button
+                                    onClick={() => setShowPreview(!showPreview)}
+                                    className={`px-3 py-1.5 text-xs font-medium rounded-md transition flex justify-end items-center gap-1.5 bg-white text-[#1976d2] shadow-sm`}
+                                >
+                                    {showPreview ? <EyeOff size={14}/> : <Eye size={14}/>}
+                                    <span className="hidden sm:inline">{showPreview ? 'Hide Preview' : 'Live Card'}</span>
+                                </button>
                             </div>
 
                             {/* Form Content */}
