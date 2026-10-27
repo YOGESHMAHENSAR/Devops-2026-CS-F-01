@@ -5,6 +5,7 @@ dns.setDefaultResultOrder('ipv4first');
 dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 import express from "express";
+import client from 'prom-client';
 import mongoose from "mongoose";
 import cors from "cors";
 import authRouter from "./src/routes/auth.js";
@@ -12,6 +13,14 @@ import userInfo from "./src/routes/user.routes.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+//for prometheus config, for data scraping.
+client.collectDefaultMetrics();
+
+app.get('/metrics', async (req, res)=>{
+    res.set('Content-Type', client.register.contentType);
+    res.send(await client.register.metrics());
+})
 
 const dbUrl = process.env.ATLAS_DB_URL;
 

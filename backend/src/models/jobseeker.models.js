@@ -6,6 +6,9 @@ const Schema = mongoose.Schema;
 // or we can simply do const Schema = mongoose.Schema; without the mongoose.Schema();
 //as this make the call to the Schema instance which break the further formation of the main schema.
 
+
+//social media handle, profile pic, banner, recruiter page for job posting.
+
 const JobSeekerProfile = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
