@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=\"--dns-result-order=ipv4first\" nodemon app.js",
     "start": "cross-env NODE_OPTIONS=\"--dns-result-order=ipv4first\" node app.js",
-    "prod": "cross-env NODE_OPTIONS=\"--dns-result-order=ipv4first\" pm2 start app.js"
+    "prod": "cross-env NODE_OPTIONS=\"--dns-result-order=ipv4first\" pm2 start app.js",
+    "test": "node --test",
+    "test:ci": "node --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=test-results.xml"
   },
   "keywords": [],
   "author": "",
