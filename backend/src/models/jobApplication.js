@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
-import {User} from "./user.model";
-import { JobPosting } from "./jobPosting.model";
+import { User } from "./user.model.js";
+import { JobPosting } from "./jobPosting.model.js";
 
 const JobApplication = new Schema({
     jobId: {
@@ -29,6 +29,8 @@ const JobApplication = new Schema({
 },
 {timestamps: true},
 );
+
+JobApplication.index({ jobId: 1, seekerId: 1 }, { unique: true });
 
 const Application = mongoose.model("Application", JobApplication);
 

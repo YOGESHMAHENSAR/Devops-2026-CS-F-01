@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
-import {User} from "./user.model";
+import { User } from "./user.model.js";
 
 const JobPostingSchema = new Schema({
     recruiterId: {
@@ -36,6 +36,11 @@ const JobPostingSchema = new Schema({
     skillDemand: {
         type: [String],
         required: true,
+        default: undefined,
+        validate: {
+            validator: (skills) => Array.isArray(skills) && skills.length > 0,
+            message: "At least one required skill must be specified."
+        },
         set: (skills) => skills.map((skill) => skill.trim().toLowerCase())
     },
     jobType: {

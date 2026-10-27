@@ -3,6 +3,9 @@ import assert from 'node:assert/strict';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { User } from '../src/models/user.model.js';
+import { RecruiterProfile } from '../src/models/recuiter.model.js';
+import { JobPosting } from '../src/models/jobPosting.model.js';
+import { Application } from '../src/models/jobApplication.js';
 
 describe('Backend Unit Tests', () => {
 
@@ -55,6 +58,101 @@ describe('Backend Unit Tests', () => {
             try { await user.validate(); } catch (e) { err = e; }
             assert.ok(err, 'Expected validation error for missing password with local auth');
             assert.ok(err.errors.password, 'Expected error on password field');
+        });
+    });
+
+    describe('Recruiter Profile Schema Validation', () => {
+        it('should require organization name, designation, industry, and user id', async () => {
+            const profile = new RecruiterProfile({});
+            let err = null;
+            try { await profile.validate(); } catch (e) { err = e; }
+
+            assert.ok(err, 'Expected validation errors for missing recruiter profile fields');
+            assert.ok(err.errors.userId);
+            assert.ok(err.errors.orgName);
+            assert.ok(err.errors['contactPerson.designation']);
+            assert.ok(err.errors.industry);
+        });
+
+        it('should accept a profile matching the recruiter form fields', async () => {
+            const profile = new RecruiterProfile({
+                userId: '507f1f77bcf86cd799439011',
+                orgName: ' SeniorPro ',
+                contactPerson: { designation: ' Talent Lead ', phone: ' 1234567890 ' },
+                website: 'https://example.com',
+                companySize: '11-50',
+                industry: [' Technology '],
+                location: { headquarters: ' Bengaluru ', country: ' India ' }
+            });
+
+            await profile.validate();
+            assert.equal(profile.orgName, 'SeniorPro');
+            assert.equal(profile.contactPerson.designation, 'Talent Lead');
+            assert.equal(profile.industry[0], 'Technology');
+            assert.equal(profile.isVerified, false);
+        });
+    });
+
+    describe('Job Posting Schema Validation', () => {
+        it('should require recruiter, title, description, experience, skills, work mode, and salary', async () => {
+            const job = new JobPosting({});
+            let err = null;
+            try { await job.validate(); } catch (e) { err = e; }
+
+            assert.ok(err, 'Expected validation errors for missing required job posting fields');
+            assert.ok(err.errors.recruiterId);
+            assert.ok(err.errors.title);
+            assert.ok(err.errors.description);
+            assert.ok(err.errors['experienceDeman.min']);
+            assert.ok(err.errors.skillDemand);
+            assert.ok(err.errors.workMode);
+            assert.ok(err.errors['amount.salary']);
+        });
+
+        describe('Job Application Schema Validation', () => {
+            it('should require job, seeker, and resume URL', async () => {
+                const application = new Application({});
+                let err = null;
+                try { await application.validate(); } catch (e) { err = e; }
+
+                assert.ok(err, 'Expected validation errors for missing application fields');
+                assert.ok(err.errors.jobId);
+                assert.ok(err.errors.seekerId);
+                assert.ok(err.errors.resumeUrl);
+            });
+
+            it('should accept a submitted job application', async () => {
+                const application = new Application({
+                    jobId: '507f1f77bcf86cd799439011',
+                    seekerId: '507f1f77bcf86cd799439012',
+                    resumeUrl: 'https://example.com/resume.pdf'
+                });
+
+                await application.validate();
+                assert.equal(application.status, 'Submitted');
+                assert.equal(application.resumeUrl, 'https://example.com/resume.pdf');
+            });
+        });
+
+        it('should accept a job matching the recruiter posting form', async () => {
+            const job = new JobPosting({
+                recruiterId: '507f1f77bcf86cd799439011',
+                title: 'Senior Engineer',
+                description: 'Build products with the team.',
+                openingCount: 2,
+                experienceDeman: { min: 5, max: 10 },
+                skillDemand: [' React ', 'Node.js '],
+                jobType: 'Full-time',
+                workMode: 'Hybrid',
+                location: { city: 'Bengaluru', country: 'India' },
+                amount: { salary: 2000000, currency: 'INR', period: 'Yearly' },
+                status: 'Active'
+            });
+
+            await job.validate();
+            assert.deepEqual(job.skillDemand, ['react', 'node.js']);
+            assert.equal(job.experienceDeman.min, 5);
+            assert.equal(job.amount.period, 'Yearly');
         });
     });
 

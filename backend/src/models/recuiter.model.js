@@ -1,5 +1,5 @@
-import {mongoose} from "mongoose";
-import { User } from "./user.model";
+import mongoose from "mongoose";
+import { User } from "./user.model.js";
 
 const RecruiterProfileSchema = new mongoose.Schema({
     userId: {
@@ -27,7 +27,7 @@ const RecruiterProfileSchema = new mongoose.Schema({
         },
         phone: {
             type: String,
-            trim: trim,
+            trim: true,
         }
     },
     website: {
@@ -41,6 +41,7 @@ const RecruiterProfileSchema = new mongoose.Schema({
     industry: {
         type: [String],
         required: true,
+        default: undefined,
         set: (items) => items.map((item) => item.trim()),
     },
     location: {

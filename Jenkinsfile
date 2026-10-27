@@ -91,6 +91,57 @@ pipeline {
             }
         }
 
+        stage('Validate Recruiter and Job Forms') {
+            when {
+                expression {
+                    env.SKIP_FEEDBACK_PIPELINE != 'true'
+                }
+            }
+
+            steps {
+                script {
+                    def backendFormExitCode = 0
+                    def frontendFormExitCode = 0
+
+                    echo '===> Validating recruiter profile and job posting schemas...'
+                    dir('backend') {
+                        if (isUnix()) {
+                            backendFormExitCode = sh(
+                                returnStatus: true,
+                                script: 'npm run test:forms:ci'
+                            )
+                        } else {
+                            backendFormExitCode = bat(
+                                returnStatus: true,
+                                script: 'npm run test:forms:ci'
+                            )
+                        }
+                    }
+
+                    echo '===> Validating recruiter form UI and frontend production build...'
+                    dir('frontend') {
+                        if (isUnix()) {
+                            frontendFormExitCode = sh(
+                                returnStatus: true,
+                                script: 'npm run test:forms:ci && npm run build'
+                            )
+                        } else {
+                            frontendFormExitCode = bat(
+                                returnStatus: true,
+                                script: 'npm run test:forms:ci && npm run build'
+                            )
+                        }
+                    }
+
+                    if (backendFormExitCode != 0 || frontendFormExitCode != 0) {
+                        error("Recruiter/job form checks failed (backend: ${backendFormExitCode}, frontend: ${frontendFormExitCode}).")
+                    }
+
+                    echo 'Recruiter profile and job posting form checks passed.'
+                }
+            }
+        }
+
         stage('Run Tests') {
             when {
                 expression {
@@ -387,12 +438,12 @@ $testRows========================================
 
         always {
             junit(
-                testResults: '**/test-results.xml',
+                testResults: '**/*test-results.xml',
                 allowEmptyResults: true
             )
 
             archiveArtifacts(
-                artifacts: 'feedback.txt, **/test-results.xml',
+                artifacts: 'feedback.txt, **/*test-results.xml',
                 fingerprint: true,
                 allowEmptyArchive: true
             )

@@ -10,6 +10,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import authRouter from "./src/routes/auth.js";
 import userInfo from "./src/routes/user.routes.js";
+import recruiterRouter from "./src/routes/recruiter.routes.js";
+import jobsRouter from "./src/routes/jobs.routes.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -49,6 +51,8 @@ app.use(express.urlencoded({limit: "40kb",extended: true}));
 
 app.use("/feed/auth", authRouter);
 app.use("/jobseeker", userInfo);
+app.use("/recruiter", recruiterRouter);
+app.use("/jobs", jobsRouter);
 // app.use("/feed/jobs", jobsRouter);
 
 // app.get("/home", (req, res)=>{

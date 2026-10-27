@@ -9,7 +9,9 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "node --test",
-    "test:ci": "node --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=test-results.xml"
+    "test:ci": "node --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=test-results.xml",
+    "test:forms": "node --test test/recruiter-forms.test.js",
+    "test:forms:ci": "node --test test/recruiter-forms.test.js --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=recruiter-form-test-results.xml"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
