@@ -58,6 +58,8 @@ app.use("/jobs", jobsRouter);
 // app.get("/home", (req, res)=>{
 //     return res.json({"hello": "good to go"});
 // })
+app.use("/api/jobs", jobsRouter);
+app.use("/api/applications", applicationsRouter);
 
 app.listen(port, () =>{
     console.log(`listening to port ${port}`)
