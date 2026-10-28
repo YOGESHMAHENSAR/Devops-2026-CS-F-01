@@ -9,6 +9,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import authRouter from "./src/routes/auth.js";
 import userInfo from "./src/routes/user.routes.js";
+import jobsRouter from "./src/routes/job.routes.js";
+import applicationsRouter from "./src/routes/application.routes.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -45,6 +47,8 @@ app.use("/jobseeker", userInfo);
 // app.get("/home", (req, res)=>{
 //     return res.json({"hello": "good to go"});
 // })
+app.use("/api/jobs", jobsRouter);
+app.use("/api/applications", applicationsRouter);
 
 app.listen(port, () =>{
     console.log(`listening to port ${port}`)
