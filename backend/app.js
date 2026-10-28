@@ -5,15 +5,24 @@ dns.setDefaultResultOrder('ipv4first');
 dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 import express from "express";
+import client from 'prom-client';
 import mongoose from "mongoose";
 import cors from "cors";
 import authRouter from "./src/routes/auth.js";
 import userInfo from "./src/routes/user.routes.js";
-import jobsRouter from "./src/routes/job.routes.js";
-import applicationsRouter from "./src/routes/application.routes.js";
+import recruiterRouter from "./src/routes/recruiter.routes.js";
+import jobsRouter from "./src/routes/jobs.routes.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+//for prometheus config, for data scraping.
+client.collectDefaultMetrics();
+
+app.get('/metrics', async (req, res)=>{
+    res.set('Content-Type', client.register.contentType);
+    res.send(await client.register.metrics());
+})
 
 const dbUrl = process.env.ATLAS_DB_URL;
 
@@ -42,6 +51,8 @@ app.use(express.urlencoded({limit: "40kb",extended: true}));
 
 app.use("/feed/auth", authRouter);
 app.use("/jobseeker", userInfo);
+app.use("/recruiter", recruiterRouter);
+app.use("/jobs", jobsRouter);
 // app.use("/feed/jobs", jobsRouter);
 
 // app.get("/home", (req, res)=>{

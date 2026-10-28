@@ -64,7 +64,7 @@ function AppContent() {
                         <Route path="/working" element={
                             <Protected user={user} ><Working /></Protected>
                         } />
-                        <Route path="/Employer" element={
+                        <Route path="/employer" element={
                             <Protected user={user} roles={['recruiter']} ><Employer /> </Protected>
                         } />
                         <Route path="/admin/*" element={
